@@ -15,29 +15,21 @@ void game::TestController::tick()
 {
     if (!game::eventQueue.empty())
     {
+        // One time key down detection
         game::EVENT::Event event = game::eventQueue.pop();
-        if (event.data[0] == 'q')
-        {
-            // glutLeaveMainLoop();
+        if (event.type == game::EVENT::Event::EventType::KEYBOARD_EVENT && event.data[0] == 'q')
             quit = true;
-        }
-        else if (event.data[0] == 'w')
-        {
-            _Move(true, true);
-        }
-        else if (event.data[0] == 's')
-        {
-            _Move(true, false);
-        }
-        else if (event.data[0] == 'a')
-        {
-            _Move(false, true);
-        }
-        else if (event.data[0] == 'd')
-        {
-            _Move(false, false);
-        }
     }
+    // Continuous key press detection
+    if (game::eventQueue.pressedKeys.find('w') != game::eventQueue.pressedKeys.end())
+        _Move(true, true);
+    else if (game::eventQueue.pressedKeys.find('s') != game::eventQueue.pressedKeys.end())
+        _Move(true, false);
+    else if (game::eventQueue.pressedKeys.find('a') != game::eventQueue.pressedKeys.end())
+        _Move(false, true);
+    else if (game::eventQueue.pressedKeys.find('d') != game::eventQueue.pressedKeys.end())
+        _Move(false, false);
+
     game::layers[1].shapes[0].rotation -= rotationSpeed;
     game::layers[1].shapes[0].x += 0.005;
 }
@@ -79,13 +71,13 @@ void game::TestController::_Move(bool axis, bool dir)
         var = &game::layers[1].shapes[0].y;
     else
         var = &game::layers[1].shapes[0].x;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 1; i++)
     {
         if (dir)
             *var -= 0.1;
         else
             *var += 0.1;
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     blockEvent(false);
 }
