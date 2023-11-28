@@ -19,27 +19,7 @@ int main(int argc, char **argv)
 
     game::UI::init(argc, argv, ui_config);
 
-    game::RES::Shape shape;
-    game::RES::Texture texture2("res/logo.png");
-    shape.texture = texture2;
-    shape.x = 0;
-    shape.y = 0;
-    shape.width = 10;
-    shape.height = 10;
-
-    game::layers.insert({1, game::RES::Layer()});
-    game::layers[0].shapes.push_back(shape);
-
-    game::RES::Texture texture("res/alpha.png");
-    std::cout << texture.textureID << std::endl;
-    shape.texture = texture;
-    shape.x = 0;
-    shape.y = 0;
-    shape.width = 2;
-    shape.height = 2;
-
-    game::layers.insert({0, game::RES::Layer()});
-    game::layers[1].shapes.push_back(shape);
+    
 
     game::TestController controller;
     game::TestController controller2;

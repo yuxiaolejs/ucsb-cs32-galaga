@@ -41,10 +41,10 @@ void game::Controller::_start()
     {
         if (quit)
         {
+            this->exit();
             if (callback)
                 callback();
-            this->exit();
-            break;
+            return;
         }
 
         this->tick();
