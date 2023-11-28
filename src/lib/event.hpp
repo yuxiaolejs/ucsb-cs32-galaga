@@ -12,6 +12,7 @@ namespace game::EVENT
         {
             NONE,
             KEYBOARD_EVENT,
+            KEYBOARD_UP_EVENT,
         };
         EventType type;
 

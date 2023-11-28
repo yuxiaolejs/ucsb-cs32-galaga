@@ -23,5 +23,6 @@ namespace game::UI
     void glInit();
     void display();
     void keyboard(unsigned char key, int x, int y);
+    void keyboardUp(unsigned char key, int x, int y);
 }
 #endif
