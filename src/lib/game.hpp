@@ -26,5 +26,6 @@ namespace game
     };
     extern std::map<int, game::RES::Layer> layers;
     extern game::EVENT::EventQueue eventQueue;
+    extern game::RES::TextureManager textureManager;
 }
 #endif

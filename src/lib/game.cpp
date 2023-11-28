@@ -12,6 +12,7 @@
 
 std::map<int, game::RES::Layer> game::layers;
 game::EVENT::EventQueue game::eventQueue;
+game::RES::TextureManager game::textureManager;
 
 game::Controller::Controller()
 {
