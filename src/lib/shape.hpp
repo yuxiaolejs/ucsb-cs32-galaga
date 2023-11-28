@@ -16,6 +16,7 @@ namespace game::RES
         float y;
 
         float rotation;
+        float opacity;
 
         GLenum mode;
         std::vector<std::pair<GLfloat, GLfloat>> vertices;

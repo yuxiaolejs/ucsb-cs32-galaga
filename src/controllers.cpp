@@ -11,6 +11,45 @@
 #include <mutex>
 #include <thread>
 
+void game::StartScreenController::tick()
+{
+    if (!game::eventQueue.empty())
+    {
+        // One time key down detection
+        game::EVENT::Event event = game::eventQueue.pop();
+        if (event.type == game::EVENT::Event::EventType::KEYBOARD_EVENT && event.data[0] == 'c')
+            quit = true;
+    }
+}
+void game::StartScreenController::init()
+{
+    std::cout << "TestController init" << std::endl;
+    game::RES::Shape shape;
+    shape.texture = game::textureManager.getTexture("logo");
+    shape.x = 0;
+    shape.y = 0;
+    shape.width = 10;
+    shape.height = 10;
+
+    game::layers.insert({1, game::RES::Layer()});
+    game::layers[0].shapes.push_back(shape);
+
+    shape.texture = game::textureManager.getTexture("alpha");
+    shape.x = 0;
+    shape.y = 0;
+    shape.width = 2;
+    shape.height = 2;
+
+    game::layers.insert({0, game::RES::Layer()});
+    game::layers[1].shapes.push_back(shape);
+}
+
+void game::StartScreenController::exit()
+{
+    std::cout << "TestController exit" << std::endl;
+    game::layers.clear();
+}
+
 void game::TestController::tick()
 {
     if (!game::eventQueue.empty())

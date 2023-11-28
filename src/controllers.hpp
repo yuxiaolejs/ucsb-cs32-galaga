@@ -3,6 +3,17 @@
 #include "lib/game.hpp"
 namespace game
 {
+    class StartScreenController : public Controller
+    {
+    public:
+        StartScreenController() : Controller(){};
+
+    private:
+        void tick(); // Must be implemented
+        void init(); // Must be implemented
+        void exit(); // Must be implemented
+    };
+
     class TestController : public Controller
     {
     public:

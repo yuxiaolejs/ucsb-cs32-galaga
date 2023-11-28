@@ -16,6 +16,7 @@ game::RES::Shape::Shape()
     this->name = "noName";
     this->id = 0;
     this->rotation = 0;
+    this->opacity = 1;
     this->mode = GL_QUADS;
     this->vertices = std::vector<std::pair<GLfloat, GLfloat>>({{-1, -1}, {1, -1}, {1, 1}, {-1, 1}});
     this->texCoords = std::vector<std::pair<GLfloat, GLfloat>>({{0, 0}, {1, 0}, {1, 1}, {0, 1}});

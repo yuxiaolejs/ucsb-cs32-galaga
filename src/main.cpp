@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 
     
 
-    game::TestController controller;
+    game::StartScreenController controller;
     game::TestController controller2;
 
     controller.start()->then([&]() {

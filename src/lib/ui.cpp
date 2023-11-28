@@ -93,6 +93,7 @@ void game::UI::display()
             // Draw a textured square
             float trans_x = shapes[i].x, trans_y = -shapes[i].y;
 
+            glColor4f(1, 1, 1, shapes[i].opacity);
             glTranslatef(trans_x, trans_y, 0.0);
             glRotatef(shapes[i].rotation, 0.0, 0.0, 1.0);
             glTranslatef(-trans_x, -trans_y, 0.0);
