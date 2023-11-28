@@ -20,28 +20,48 @@ void game::StartScreenController::tick()
         if (event.type == game::EVENT::Event::EventType::KEYBOARD_EVENT && event.data[0] == 'c')
             quit = true;
     }
+    if (dir)
+        counter++;
+    else
+        counter--;
+    if (counter >= 100)
+        dir = false;
+    else if (counter <= 20)
+        dir = true;
+    game::layers[0].shapes[2].opacity = (float)counter / 100.0;
 }
 void game::StartScreenController::init()
 {
     std::cout << "TestController init" << std::endl;
+
+    game::layers.insert({1, game::RES::Layer()});
+
     game::RES::Shape shape;
     shape.texture = game::textureManager.getTexture("logo");
     shape.x = 0;
-    shape.y = 0;
-    shape.width = 10;
-    shape.height = 10;
+    shape.y = -1;
+    shape.width = 8;
+    shape.height = 8;
 
-    game::layers.insert({1, game::RES::Layer()});
     game::layers[0].shapes.push_back(shape);
 
-    shape.texture = game::textureManager.getTexture("alpha");
-    shape.x = 0;
-    shape.y = 0;
-    shape.width = 2;
-    shape.height = 2;
+    shape = game::RES::Shape();
+    shape.texture = game::textureManager.getTexture("LB_TEXT");
+    shape.x = -6.8;
+    shape.y = 5;
+    shape.width = 6;
+    shape.height = 1;
 
-    game::layers.insert({0, game::RES::Layer()});
-    game::layers[1].shapes.push_back(shape);
+    game::layers[0].shapes.push_back(shape);
+
+    shape = game::RES::Shape();
+    shape.texture = game::textureManager.getTexture("PRESS_C");
+    shape.x = 0;
+    shape.y = 3.8;
+    shape.width = 6;
+    shape.height = 1;
+
+    game::layers[0].shapes.push_back(shape);
 }
 
 void game::StartScreenController::exit()

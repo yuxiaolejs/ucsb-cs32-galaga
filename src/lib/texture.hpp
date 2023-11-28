@@ -28,6 +28,7 @@ namespace game::RES
         TextureManager();
         ~TextureManager();
         Texture &getTexture(std::string fileName);
+        void loadAllTextures();
 
     private:
         std::map<std::string, Texture> textures;

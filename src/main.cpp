@@ -19,22 +19,21 @@ int main(int argc, char **argv)
 
     game::UI::init(argc, argv, ui_config);
 
-    
+    game::textureManager.loadAllTextures();
 
     game::StartScreenController controller;
     game::TestController controller2;
 
-    controller.start()->then([&]() {
+    controller.start()->then([&]()
+                             {
         std::cout << "Controller CALLLLLED" << std::endl;
             // glutLeaveMainLoop();
-            controller2.start();
-    });
+            controller2.start(); });
 
-    controller2.then([]() {
+    controller2.then([]()
+                     {
         std::cout << "Controller2 CALLLLLED" << std::endl;
-            glutLeaveMainLoop();
-    });
-
+            glutLeaveMainLoop(); });
 
     game::UI::start();
 

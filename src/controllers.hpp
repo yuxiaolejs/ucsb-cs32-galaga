@@ -12,6 +12,11 @@ namespace game
         void tick(); // Must be implemented
         void init(); // Must be implemented
         void exit(); // Must be implemented
+
+        // User defined
+
+        bool dir = true;
+        int counter = 0;
     };
 
     class TestController : public Controller

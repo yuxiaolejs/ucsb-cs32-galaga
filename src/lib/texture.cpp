@@ -4,6 +4,8 @@
 #include <png.h>
 #include <iostream>
 #include <cstring>
+#include <map>
+#include <filesystem>
 
 game::RES::Texture::Texture()
 {
@@ -189,11 +191,25 @@ game::RES::TextureManager::TextureManager()
 game::RES::TextureManager::~TextureManager()
 {
 }
+void game::RES::TextureManager::loadAllTextures()
+{
+    for (const auto &file : std::filesystem::directory_iterator(texturesPath))
+    {
+        if (file.path().extension() != ".png")
+            continue;
+        std::string fileName = file.path().filename().string();
+        // remove extension
+        fileName.erase(fileName.find_last_of("."), std::string::npos);
+        std::cout << "Loading texture: " << fileName << std::endl;
+        this->textures.insert({fileName, Texture(texturesPath + fileName + ".png")});
+    }
+}
 game::RES::Texture &game::RES::TextureManager::getTexture(std::string fileName)
 {
     if (this->textures.find(fileName) == this->textures.end())
     {
-        this->textures.insert({fileName, Texture(texturesPath + fileName + ".png")});
+        // this->textures.insert({fileName, Texture(texturesPath + fileName + ".png")});
+        std::cout << "Can't find texture (Not Loaded): " << fileName << std::endl;
     }
     return this->textures[fileName];
 }
