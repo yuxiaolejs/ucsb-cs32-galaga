@@ -1,10 +1,10 @@
-#include "ui.hpp"
-#include "uiconf.hpp"
-#include "texture.hpp"
-#include "shape.hpp"
-#include "game.hpp"
+#include "lib/ui.hpp"
+#include "lib/uiconf.hpp"
+#include "lib/texture.hpp"
+#include "lib/shape.hpp"
+#include "lib/game.hpp"
+#include "lib/layer.hpp"
 #include "controllers.hpp"
-#include "layer.hpp"
 #include <iostream>
 #include <thread>
 

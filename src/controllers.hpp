@@ -1,6 +1,6 @@
 #ifndef CONTROLLERS_HPP
 #define CONTROLLERS_HPP
-#include "game.hpp"
+#include "lib/game.hpp"
 namespace game
 {
     class TestController : public Controller

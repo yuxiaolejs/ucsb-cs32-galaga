@@ -2,10 +2,10 @@
 #include <iostream> // std::cout, std::endl
 #include <thread>   // std::this_thread::sleep_for
 #include <chrono>   // std::chrono::seconds
-#include "ui.hpp"
-#include "game.hpp"
+#include "lib/ui.hpp"
+#include "lib/game.hpp"
+#include "lib/utils.hpp"
 #include "controllers.hpp"
-#include "utils.hpp"
 
 #include <GL/freeglut.h>
 #include <mutex>

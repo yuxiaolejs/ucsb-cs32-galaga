@@ -5,9 +5,20 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(PNG REQUIRED)
-set (CMAKE_CXX_FLAGS "-g")
-add_executable(ezg src/main.cpp src/ui.cpp src/shape.cpp src/texture.cpp src/utils.cpp src/game.cpp src/layer.cpp src/event.cpp src/controllers.cpp)
+set(CMAKE_CXX_FLAGS "-g")
+add_executable(ezg
+    src/main.cpp
+    src/controllers.cpp
+    src/lib/ui.cpp
+    src/lib/shape.cpp
+    src/lib/texture.cpp
+    src/lib/utils.cpp
+    src/lib/game.cpp
+    src/lib/layer.cpp
+    src/lib/event.cpp
+)
 target_link_libraries(ezg glut OpenGL::GL OpenGL::GLU)
 target_link_libraries(ezg png)
+
 # target_link_libraries(test )
 # target_link_libraries(CanvasDownloader ${CURL_LIBRARIES})
