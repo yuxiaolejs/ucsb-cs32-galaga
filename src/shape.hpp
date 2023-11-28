@@ -6,8 +6,9 @@
 #include <vector>
 namespace game::RES
 {
-    struct Shape
+    class Shape
     {
+    public:
         Shape();
         float width;
         float height;

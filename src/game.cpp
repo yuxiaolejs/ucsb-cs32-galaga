@@ -12,24 +12,24 @@
 
 game::Controller::Controller()
 {
-    std::cout << "Controller const" << std::endl;
+    std::cout << "Controller const1" << std::endl;
 }
 
 game::Controller::Controller(std::function<void()> callback)
 {
-    std::cout << "Controller const" << std::endl;
+    std::cout << "Controller const2" << std::endl;
     this->callback = callback;
 }
 
 game::Controller *game::Controller::start()
 {
-    std::cout << "Controller start" << std::endl;
+    std::cout << "Controller start3" << std::endl;
     controllerThread = std::thread(&game::Controller::_start, this);
     return this;
 }
 game::Controller *game::Controller::then(std::function<void()> callback)
 {
-    std::cout << "Controller then" << std::endl;
+    std::cout << "Controller then4" << std::endl;
     this->callback = callback;
     return this;
 }
