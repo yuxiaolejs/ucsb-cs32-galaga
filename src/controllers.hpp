@@ -7,9 +7,11 @@ namespace game
     {
     public:
         TestController() : Controller(){};
-        void tick();
 
     private:
+        void tick();
+        void init();
+        void exit();
         float rotationSpeed = 1.0;
         void _Move(bool axis, bool dir);
     };

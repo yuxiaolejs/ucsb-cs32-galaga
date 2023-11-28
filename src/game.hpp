@@ -15,14 +15,14 @@ namespace game
     protected:
         void _start();
         virtual void tick() = 0;
+        virtual void init() = 0;
+        virtual void exit() = 0;
         void blockEvent(bool block);
+
         std::thread controllerThread;
-        const int TICK_RATE = 60;
         std::function<void()> callback;
-
+        const int TICK_RATE = 60;
         bool quit = false;
-
-        // User defined data
     };
 }
 #endif

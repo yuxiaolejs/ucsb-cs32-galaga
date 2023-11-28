@@ -42,6 +42,16 @@ void game::TestController::tick()
     game::UI::layers[1].shapes[0].x += 0.005;
 }
 
+void game::TestController::init()
+{
+    std::cout << "TestController init" << std::endl;
+}
+
+void game::TestController::exit()
+{
+    std::cout << "TestController exit" << std::endl;
+}
+
 void game::TestController::_Move(bool axis, bool dir)
 {
     blockEvent(true);
