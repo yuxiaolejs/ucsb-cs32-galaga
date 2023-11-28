@@ -12,8 +12,8 @@
 
 namespace game::UI
 {
-    extern std::map<int, game::RES::Layer> layers;
-    extern game::EVENT::EventQueue eventQueue;
+    // extern std::map<int, game::RES::Layer> layers;
+    // extern game::EVENT::EventQueue eventQueue;
 
     void start();
 

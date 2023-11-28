@@ -14,13 +14,10 @@
 #include "shape.hpp"
 #include "utils.hpp"
 #include "layer.hpp"
+#include "game.hpp"
 
 namespace game::UI
 {
-    std::map<int, game::RES::Layer> layers;
-
-    game::EVENT::EventQueue eventQueue;
-
     u_int32_t lastFpsReport = 0;
     u_int32_t frames = 0;
 
@@ -84,7 +81,7 @@ void game::UI::display()
 
     // Enable and bind the texture
 
-    for (auto layer : layers)
+    for (auto layer : game::layers)
     {
         std::vector<game::RES::Shape> shapes = layer.second.shapes;
         for (size_t i = 0; i < shapes.size(); i++)

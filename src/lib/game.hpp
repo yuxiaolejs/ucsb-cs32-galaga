@@ -24,5 +24,7 @@ namespace game
         const int TICK_RATE = 60;
         bool quit = false;
     };
+    extern std::map<int, game::RES::Layer> layers;
+    extern game::EVENT::EventQueue eventQueue;
 }
 #endif

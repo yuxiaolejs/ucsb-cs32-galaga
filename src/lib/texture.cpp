@@ -153,7 +153,8 @@ bool game::RES::Texture::loadPngImage()
     width = _width;
     height = _height;
 
-    if (color_type & PNG_COLOR_MASK_ALPHA){
+    if (color_type & PNG_COLOR_MASK_ALPHA)
+    {
         hasAlpha = true;
     }
 
@@ -180,4 +181,19 @@ bool game::RES::Texture::loadPngImage()
 
     /* That's it */
     return true;
+}
+
+game::RES::TextureManager::TextureManager()
+{
+}
+game::RES::TextureManager::~TextureManager()
+{
+}
+game::RES::Texture &game::RES::TextureManager::getTexture(std::string fileName)
+{
+    if (this->textures.find(fileName) == this->textures.end())
+    {
+        this->textures.insert({fileName, Texture(texturesPath + fileName + ".png")});
+    }
+    return this->textures[fileName];
 }

@@ -10,6 +10,9 @@
 #include <mutex>
 #include <thread>
 
+std::map<int, game::RES::Layer> game::layers;
+game::EVENT::EventQueue game::eventQueue;
+
 game::Controller::Controller()
 {
 }
@@ -50,5 +53,5 @@ void game::Controller::_start()
 
 void game::Controller::blockEvent(bool block)
 {
-    game::UI::eventQueue.block = block;
+    game::eventQueue.block = block;
 }

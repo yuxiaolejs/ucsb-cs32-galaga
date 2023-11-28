@@ -2,6 +2,7 @@
 #define TEXTURE_HPP
 #include <GL/glut.h>
 #include <string>
+#include <map>
 namespace game::RES
 {
     struct Texture
@@ -19,6 +20,18 @@ namespace game::RES
     private:
         void initTexture();
         bool loadPngImage();
+    };
+
+    class TextureManager
+    {
+    public:
+        TextureManager();
+        ~TextureManager();
+        Texture &getTexture(std::string fileName);
+
+    private:
+        std::map<std::string, Texture> textures;
+        const std::string texturesPath = "res/";
     };
 }
 #endif

@@ -13,9 +13,9 @@
 
 void game::TestController::tick()
 {
-    if (!game::UI::eventQueue.empty())
+    if (!game::eventQueue.empty())
     {
-        game::EVENT::Event event = game::UI::eventQueue.pop();
+        game::EVENT::Event event = game::eventQueue.pop();
         if (event.data[0] == 'q')
         {
             // glutLeaveMainLoop();
@@ -38,8 +38,8 @@ void game::TestController::tick()
             _Move(false, false);
         }
     }
-    game::UI::layers[1].shapes[0].rotation -= rotationSpeed;
-    game::UI::layers[1].shapes[0].x += 0.005;
+    game::layers[1].shapes[0].rotation -= rotationSpeed;
+    game::layers[1].shapes[0].x += 0.005;
 }
 
 void game::TestController::init()
@@ -57,9 +57,9 @@ void game::TestController::_Move(bool axis, bool dir)
     blockEvent(true);
     float *var;
     if (axis)
-        var = &game::UI::layers[1].shapes[0].y;
+        var = &game::layers[1].shapes[0].y;
     else
-        var = &game::UI::layers[1].shapes[0].x;
+        var = &game::layers[1].shapes[0].x;
     for (int i = 0; i < 10; i++)
     {
         if (dir)

@@ -27,8 +27,8 @@ int main(int argc, char **argv)
     shape.width = 10;
     shape.height = 10;
 
-    game::UI::layers.insert({1, game::RES::Layer()});
-    game::UI::layers[0].shapes.push_back(shape);
+    game::layers.insert({1, game::RES::Layer()});
+    game::layers[0].shapes.push_back(shape);
 
     game::RES::Texture texture("res/alpha.png");
     std::cout << texture.textureID << std::endl;
@@ -38,8 +38,8 @@ int main(int argc, char **argv)
     shape.width = 2;
     shape.height = 2;
 
-    game::UI::layers.insert({0, game::RES::Layer()});
-    game::UI::layers[1].shapes.push_back(shape);
+    game::layers.insert({0, game::RES::Layer()});
+    game::layers[1].shapes.push_back(shape);
 
     game::TestController controller;
     game::TestController controller2;
