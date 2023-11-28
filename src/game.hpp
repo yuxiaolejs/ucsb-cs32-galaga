@@ -12,9 +12,9 @@ namespace game
         Controller *start();
         Controller *then(std::function<void()> callback);
 
-    private:
+    protected:
         void _start();
-        void tick();
+        virtual void tick() = 0;
         void blockEvent(bool block);
         std::thread controllerThread;
         const int TICK_RATE = 60;
@@ -23,9 +23,6 @@ namespace game
         bool quit = false;
 
         // User defined data
-        float rotationSpeed = 1.0;
-
-        void _Move(bool axis, bool dir);
     };
 }
 #endif

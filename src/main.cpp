@@ -3,6 +3,7 @@
 #include "texture.hpp"
 #include "shape.hpp"
 #include "game.hpp"
+#include "controllers.hpp"
 #include "layer.hpp"
 #include <iostream>
 #include <thread>
@@ -40,8 +41,8 @@ int main(int argc, char **argv)
     game::UI::layers.insert({0, game::RES::Layer()});
     game::UI::layers[1].shapes.push_back(shape);
 
-    game::Controller controller;
-    game::Controller controller2;
+    game::TestController controller;
+    game::TestController controller2;
 
     controller.start()->then([&]() {
         std::cout << "Controller CALLLLLED" << std::endl;
