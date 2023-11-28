@@ -3,6 +3,7 @@
 #include <queue>
 #include <vector>
 #include <cstddef>
+#include <set>
 namespace game::EVENT
 {
     struct Event
@@ -21,6 +22,7 @@ namespace game::EVENT
     struct EventQueue
     {
         const size_t MAX_SIZE = 10;
+        std::set<int> pressedKeys;
         bool block = false;
         std::queue<Event> queue;
         bool overflow();

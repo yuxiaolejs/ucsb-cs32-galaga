@@ -23,6 +23,11 @@ void game::EVENT::EventQueue::push(Event event)
             queue.pop();
         }
     }
+    if (event.type == Event::EventType::KEYBOARD_EVENT)
+        pressedKeys.insert(event.data[0]);
+    else if (event.type == Event::EventType::KEYBOARD_UP_EVENT)
+        pressedKeys.erase(event.data[0]);
+
     queue.push(event);
 }
 
