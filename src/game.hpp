@@ -1,12 +1,16 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 #include <thread>
+#include <functional>
 namespace game
 {
-    struct Controller
+    class Controller
     {
+    public:
         Controller();
-        void start();
+        Controller(std::function<void()> callback);
+        Controller *start();
+        Controller *then(std::function<void()> callback);
 
     private:
         void _start();
@@ -14,6 +18,9 @@ namespace game
         void blockEvent(bool block);
         std::thread controllerThread;
         const int TICK_RATE = 60;
+        std::function<void()> callback;
+
+        bool quit = false;
 
         // User defined data
         float rotationSpeed = 1.0;

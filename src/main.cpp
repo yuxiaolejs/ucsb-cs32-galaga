@@ -7,6 +7,8 @@
 #include <iostream>
 #include <thread>
 
+#include <GL/freeglut.h>
+
 int main(int argc, char **argv)
 {
     game::UI::UIConf ui_config;
@@ -39,7 +41,19 @@ int main(int argc, char **argv)
     game::UI::layers[1].shapes.push_back(shape);
 
     game::Controller controller;
-    controller.start();
+    game::Controller controller2;
+
+    controller.start()->then([&]() {
+        std::cout << "Controller CALLLLLED" << std::endl;
+            // glutLeaveMainLoop();
+            controller2.start();
+    });
+
+    controller2.then([]() {
+        std::cout << "Controller2 CALLLLLED" << std::endl;
+            glutLeaveMainLoop();
+    });
+
 
     game::UI::start();
 

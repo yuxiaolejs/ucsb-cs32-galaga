@@ -15,16 +15,36 @@ game::Controller::Controller()
     std::cout << "Controller const" << std::endl;
 }
 
-void game::Controller::start()
+game::Controller::Controller(std::function<void()> callback)
+{
+    std::cout << "Controller const" << std::endl;
+    this->callback = callback;
+}
+
+game::Controller *game::Controller::start()
 {
     std::cout << "Controller start" << std::endl;
     controllerThread = std::thread(&game::Controller::_start, this);
+    return this;
+}
+game::Controller *game::Controller::then(std::function<void()> callback)
+{
+    std::cout << "Controller then" << std::endl;
+    this->callback = callback;
+    return this;
 }
 
 void game::Controller::_start()
 {
     while (true)
     {
+        if (quit)
+        {
+            if (callback)
+                callback();
+            break;
+        }
+
         this->tick();
         std::this_thread::sleep_for(std::chrono::milliseconds(1000 / TICK_RATE));
     }
@@ -37,7 +57,8 @@ void game::Controller::tick()
         game::EVENT::Event event = game::UI::eventQueue.pop();
         if (event.data[0] == 'q')
         {
-            glutLeaveMainLoop();
+            // glutLeaveMainLoop();
+            quit = true;
         }
         else if (event.data[0] == 'w')
         {
