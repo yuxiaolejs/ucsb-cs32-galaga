@@ -174,6 +174,21 @@ bool game::RES::Texture::loadPngImage()
         memcpy(*data + (row_bytes * (height - 1 - i)), row_pointers[i], row_bytes);
     }
 
+    // for (int i = 0; i < row_bytes * height; i++)
+    // {
+    //     if (hasAlpha)
+    //         std::cout << this->fileName << " "
+    //                   << (int)(*data)[i++] << ", "
+    //                   << (int)(*data)[i++] << ", "
+    //                   << (int)(*data)[i++] << ", "
+    //                   << (int)(*data)[i] << std::endl;
+    //     else
+    //         std::cout << this->fileName << " "
+    //                   << (int)(*data)[i++] << ", "
+    //                   << (int)(*data)[i++] << ", "
+    //                   << (int)(*data)[i] << std::endl;
+    // }
+
     /* Clean up after the read,
      * and free any memory allocated */
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);

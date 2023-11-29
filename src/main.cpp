@@ -28,7 +28,7 @@ int main(int argc, char **argv)
                              {
         std::cout << "Controller CALLLLLED" << std::endl;
             // glutLeaveMainLoop();
-            controller2.start(); });
+        controller2.start(); });
 
     controller2.then([]()
                      {
