@@ -4,6 +4,7 @@
 #include "lib/shape.hpp"
 #include "lib/game.hpp"
 #include "lib/layer.hpp"
+#include "lib/performance.hpp"
 #include "controllers.hpp"
 #include <iostream>
 #include <thread>
@@ -20,6 +21,8 @@ int main(int argc, char **argv)
     game::UI::init(argc, argv, ui_config);
 
     game::textureManager.loadAllTextures();
+
+    game::PERF::performanceManager.start(); // Comment this line to disable performance manager
 
     game::StartScreenController controller;
     game::TestController controller2;
