@@ -97,7 +97,7 @@ void game::TestController::tick()
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
     {
-        if (game::layers[1].shapes[i].x < -MAX_HORIZ_COORD)
+        if (outOfBound(game::layers[1].shapes[i]))
         {
             game::layers[1].shapes.erase(game::layers[1].shapes.begin() + i);
         }
@@ -172,6 +172,11 @@ void game::TestController::init()
     shape.rotation = -90;
 
     game::layers[1].shapes.push_back(shape);
+}
+
+bool game::TestController::outOfBound(game::RES::Shape &shape)
+{
+    return shape.x < -MAX_HORIZ_COORD || shape.x > MAX_HORIZ_COORD || shape.y < -MAX_VERTI_COORD || shape.y > MAX_VERTI_COORD;
 }
 
 void game::TestController::exit()

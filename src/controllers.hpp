@@ -1,6 +1,7 @@
 #ifndef CONTROLLERS_HPP
 #define CONTROLLERS_HPP
 #include "lib/game.hpp"
+#include "lib/shape.hpp"
 namespace game
 {
     class StartScreenController : public Controller
@@ -32,7 +33,7 @@ namespace game
         // User defined
         float rotationSpeed = 1.0;
 
-        const float MAX_HORIZ_COORD = 9;
+        const float MAX_HORIZ_COORD = 10;
         const float MAX_VERTI_COORD = 5;
 
         const float COLLISION_BOX_RADIUS = 0.7;
@@ -44,6 +45,8 @@ namespace game
         void generateEnermyShips();
 
         void collisionDetection();
+
+        bool outOfBound(game::RES::Shape &shape);
     };
 }
 #endif
