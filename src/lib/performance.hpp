@@ -12,6 +12,14 @@ namespace game::PERF
         uint32_t ticks = 0;
         uint32_t renderLatency = 0;
 
+        uint32_t r_fps = 0;
+        uint32_t r_ticks = 0;
+        uint32_t r_renderLatency = 0;
+
+        uint64_t lastReport = 0;
+
+        uint64_t startTimestamp = 0;
+
         bool quit = false;
 
         void start();
@@ -24,6 +32,7 @@ namespace game::PERF
         const std::string GREEN = "\033[32m";
         const std::string YELLOW = "\033[33m";
         const std::string DEFAULT = "\033[0m";
+        const std::string BLUE = "\033[34m";
     };
 
     extern PerformanceManager performanceManager;

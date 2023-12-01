@@ -19,7 +19,7 @@ namespace game::UTILS
         bool running;
     };
 
-    uint32_t getTimestamp();
+    uint64_t getTimestamp();
     uint64_t highResTimestamp();
 }
 #endif

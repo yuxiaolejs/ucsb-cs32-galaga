@@ -5,6 +5,7 @@
 #include "ui.hpp"
 #include "game.hpp"
 #include "utils.hpp"
+#include "performance.hpp"
 
 #include <GL/freeglut.h>
 #include <mutex>
@@ -50,6 +51,10 @@ void game::Controller::_start()
         }
         this->tick();
         uint64_t tickDelay = game::UTILS::highResTimestamp() - tickStart;
+
+        game::PERF::performanceManager.ticks++;
+        game::PERF::performanceManager.renderLatency = tickDelay;
+
         if (tickDelay < TICK_DELAY)
             std::this_thread::sleep_for(std::chrono::nanoseconds(TICK_DELAY - tickDelay));
     }
