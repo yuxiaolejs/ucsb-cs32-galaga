@@ -153,11 +153,11 @@ void game::TestController::init()
 {
     std::cout << "TestController init" << std::endl;
     game::RES::Shape shape;
-    shape.texture = game::textureManager.getTexture("logo");
+    shape.texture = game::textureManager.getTexture("bg");
     shape.x = 0;
     shape.y = 0;
-    shape.width = 10;
-    shape.height = 10;
+    shape.width = 20;
+    shape.height = 11.5;
 
     game::layers.insert({1, game::RES::Layer()});
     game::layers[0].shapes.push_back(shape);
