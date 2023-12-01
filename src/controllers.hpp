@@ -43,6 +43,7 @@ namespace game
         int framesSinceLastShipGeneration = 0;
 
         void generateEnermyShips();
+        void generateAllyProjectile();
 
         void collisionDetection();
 

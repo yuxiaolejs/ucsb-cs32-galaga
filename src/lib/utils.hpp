@@ -20,5 +20,6 @@ namespace game::UTILS
     };
 
     uint32_t getTimestamp();
+    uint64_t highResTimestamp();
 }
 #endif

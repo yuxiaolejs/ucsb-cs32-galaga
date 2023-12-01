@@ -10,6 +10,7 @@
 #include <GL/freeglut.h>
 #include <mutex>
 #include <thread>
+#include <cstdlib>
 
 void game::StartScreenController::tick()
 {
