@@ -119,7 +119,7 @@ void game::UI::display()
 
 void game::UI::keyboard(unsigned char key, int x, int y)
 {
-    std::cout << "Key pressed: " << key << std::endl;
+    // std::cout << "Key pressed: " << key << std::endl;
     game::EVENT::Event event;
     event.type = game::EVENT::Event::EventType::KEYBOARD_EVENT;
     event.data.push_back(key);
@@ -128,7 +128,7 @@ void game::UI::keyboard(unsigned char key, int x, int y)
 
 void game::UI::keyboardUp(unsigned char key, int x, int y)
 {
-    std::cout << "Key released: " << key << std::endl;
+    // std::cout << "Key released: " << key << std::endl;
     game::EVENT::Event event;
     event.type = game::EVENT::Event::EventType::KEYBOARD_UP_EVENT;
     event.data.push_back(key);
