@@ -31,6 +31,11 @@ make
 ./ezg
 ```
 
+### How to play
+- Use `w, s, a, d` to move
+- Avoid enermy's projectile (todo)
+- Shoot enermy with projectile (todo)
+
 ## Check point info:
 - [Check point 1](ckpt1.md)
 - [Check point 2](ckpt2.md)
