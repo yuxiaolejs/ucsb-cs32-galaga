@@ -80,7 +80,7 @@ void game::UI::display()
     // glRotatef(angle, 0.0, 0.0, 1.0);
 
     // Enable and bind the texture
-
+    std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     for (auto layer : game::layers)
     {
         std::vector<game::RES::Shape> shapes = layer.second.shapes;
@@ -114,6 +114,8 @@ void game::UI::display()
             glPopMatrix();
         }
     }
+    delete layersLock;
+
     glutSwapBuffers();
 }
 

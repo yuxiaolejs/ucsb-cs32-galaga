@@ -94,6 +94,7 @@ void game::TestController::tick()
     if (eqk.find('d') != eqk.end() && ourShip.x < MAX_HORIZ_COORD)
         game::layers[1].shapes[0].x += 0.1;
 
+    std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
     {
         if (game::layers[1].shapes[i].x < -MAX_HORIZ_COORD)
@@ -102,6 +103,7 @@ void game::TestController::tick()
         }
         game::layers[1].shapes[i].x -= 0.05;
     }
+    delete layersLock;
     this->generateEnermyShips();
     this->collisionDetection();
     // game::layers[1].shapes[0].rotation -= rotationSpeed;
@@ -116,7 +118,9 @@ void game::TestController::collisionDetection()
     {
         if (abs(ourShip.x - shipVec[i].x) < COLLISION_BOX_RADIUS && abs(ourShip.y - shipVec[i].y) < COLLISION_BOX_RADIUS)
         {
+            std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
+            delete layersLock;
         }
     }
 }
