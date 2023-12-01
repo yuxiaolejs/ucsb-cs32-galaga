@@ -29,6 +29,8 @@ void game::StartScreenController::tick()
     else if (counter <= 20)
         dir = true;
     game::layers[0].shapes[2].opacity = (float)counter / 100.0;
+    game::layers[0].shapes[2].x = (float)counter / 100.0;
+    game::layers[0].shapes[1].x = -(float)counter / 100.0;
 }
 void game::StartScreenController::init()
 {
@@ -79,18 +81,68 @@ void game::TestController::tick()
         if (event.type == game::EVENT::Event::EventType::KEYBOARD_EVENT && event.data[0] == 'q')
             quit = true;
     }
-    // Continuous key press detection
-    if (game::eventQueue.pressedKeys.find('w') != game::eventQueue.pressedKeys.end())
-        _Move(true, true);
-    else if (game::eventQueue.pressedKeys.find('s') != game::eventQueue.pressedKeys.end())
-        _Move(true, false);
-    else if (game::eventQueue.pressedKeys.find('a') != game::eventQueue.pressedKeys.end())
-        _Move(false, true);
-    else if (game::eventQueue.pressedKeys.find('d') != game::eventQueue.pressedKeys.end())
-        _Move(false, false);
 
-    game::layers[1].shapes[0].rotation -= rotationSpeed;
-    game::layers[1].shapes[0].x += 0.005;
+    // Continuous key press detection - press to move our ship
+    auto &eqk = game::eventQueue.pressedKeys; // Shorten the stupid long name of a game variable
+    auto &ourShip = game::layers[1].shapes[0];
+    if (eqk.find('w') != eqk.end() && ourShip.y > -MAX_VERTI_COORD)
+        game::layers[1].shapes[0].y -= 0.1;
+    if (eqk.find('s') != eqk.end() && ourShip.y < MAX_VERTI_COORD)
+        game::layers[1].shapes[0].y += 0.1;
+    if (eqk.find('a') != eqk.end() && ourShip.x > -MAX_HORIZ_COORD)
+        game::layers[1].shapes[0].x -= 0.1;
+    if (eqk.find('d') != eqk.end() && ourShip.x < MAX_HORIZ_COORD)
+        game::layers[1].shapes[0].x += 0.1;
+
+    for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
+    {
+        if (game::layers[1].shapes[i].x < -MAX_HORIZ_COORD)
+        {
+            game::layers[1].shapes.erase(game::layers[1].shapes.begin() + i);
+        }
+        game::layers[1].shapes[i].x -= 0.05;
+    }
+    this->generateEnermyShips();
+    this->collisionDetection();
+    // game::layers[1].shapes[0].rotation -= rotationSpeed;
+    // game::layers[1].shapes[0].x += 0.005;
+}
+
+void game::TestController::collisionDetection()
+{
+    auto &ourShip = game::layers[1].shapes[0];
+    auto &shipVec = game::layers[1].shapes;
+    for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
+    {
+        if (abs(ourShip.x - shipVec[i].x) < COLLISION_BOX_RADIUS && abs(ourShip.y - shipVec[i].y) < COLLISION_BOX_RADIUS)
+        {
+            shipVec.erase(shipVec.begin() + i);
+        }
+    }
+}
+
+void game::TestController::generateEnermyShips()
+{
+    if (framesSinceLastShipGeneration < framesPerShipGeneration)
+    {
+        framesSinceLastShipGeneration++;
+        return;
+    }
+    framesSinceLastShipGeneration = 0;
+
+    game::RES::Shape shape;
+    for (size_t i = 0; i < ENERMY_SHIPS_IN_A_GEN; i++)
+    {
+        shape = game::RES::Shape();
+        shape.texture = game::textureManager.getTexture("ship1"); // Enermy ship
+        shape.x = 6;
+        shape.y = (float)i - ((float)ENERMY_SHIPS_IN_A_GEN / 2.0);
+        shape.width = 1;
+        shape.height = 1;
+        shape.rotation = 90;
+
+        game::layers[1].shapes.push_back(shape);
+    }
 }
 
 void game::TestController::init()
@@ -106,13 +158,15 @@ void game::TestController::init()
     game::layers.insert({1, game::RES::Layer()});
     game::layers[0].shapes.push_back(shape);
 
-    shape.texture = game::textureManager.getTexture("alpha");
+    game::layers.insert({0, game::RES::Layer()}); // Layer of ships
+
+    shape.texture = game::textureManager.getTexture("ship1"); // Our ship
     shape.x = 0;
     shape.y = 0;
-    shape.width = 2;
-    shape.height = 2;
+    shape.width = 1;
+    shape.height = 1;
+    shape.rotation = -90;
 
-    game::layers.insert({0, game::RES::Layer()});
     game::layers[1].shapes.push_back(shape);
 }
 
@@ -120,23 +174,4 @@ void game::TestController::exit()
 {
     std::cout << "TestController exit" << std::endl;
     game::layers.clear();
-}
-
-void game::TestController::_Move(bool axis, bool dir)
-{
-    blockEvent(true);
-    float *var;
-    if (axis)
-        var = &game::layers[1].shapes[0].y;
-    else
-        var = &game::layers[1].shapes[0].x;
-    for (int i = 0; i < 1; i++)
-    {
-        if (dir)
-            *var -= 0.1;
-        else
-            *var += 0.1;
-        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    }
-    blockEvent(false);
 }

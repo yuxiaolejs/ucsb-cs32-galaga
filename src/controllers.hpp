@@ -28,8 +28,22 @@ namespace game
         void tick();
         void init();
         void exit();
+
+        // User defined
         float rotationSpeed = 1.0;
-        void _Move(bool axis, bool dir);
+
+        const float MAX_HORIZ_COORD = 9;
+        const float MAX_VERTI_COORD = 5;
+
+        const float COLLISION_BOX_RADIUS = 0.7;
+        const size_t ENERMY_SHIPS_IN_A_GEN = 7;
+
+        int framesPerShipGeneration = 30;
+        int framesSinceLastShipGeneration = 0;
+
+        void generateEnermyShips();
+
+        void collisionDetection();
     };
 }
 #endif
