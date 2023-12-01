@@ -1,0 +1,61 @@
+name: build
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  makeTests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: |
+          sudo apt-get -y update
+          sudo apt-get -y install libpng-dev
+          sudo apt-get -y install zlib1g-dev
+          sudo apt-get -y install freeglut3-dev
+      - name: Make all binary
+        run: |
+          cmake .
+          make
+      # - name: Run test
+      #   run: ./lexer.out
+      # - name: Valgrind on test
+      #   run: valgrind --leak-check=full --error-exitcode=3 ./lexer.out
+      # - name: Run random test
+      #   run: node ./lexer.js
+
+  # diffTests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Make everything
+  #       run: make all
+  #     - name: Run nodejs diff tests
+  #       run: node ./prodTest.js
+  # randomTests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Make everything
+  #       run: make all
+  #     - name: Run nodejs random tests
+  #       run: node ./randomTest.js
+  # randomMemoryTests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Install Valgrind
+  #       run: |
+  #         sudo apt install valgrind
+  #         echo "Valgrind installed"
+  #     - name: Make everything
+  #       run: make all
+  #     - name: Run nodejs random memory tests
+  #       run: node ./memoryTest.js
