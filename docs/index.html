@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>CS32 Galaga</title>
+    <link rel="stylesheet" href="https://unpkg.com/docute@4/dist/docute.css">
+</head>
+
+<body>
+    <div id="docute"></div>
+    <script src="https://unpkg.com/docute@4/dist/docute.js"></script>
+    <script>
+        new Docute({
+            target: '#docute',
+            detectSystemDarkTheme: true,
+            darkThemeToggler: true,
+            layout: 'narrow',
+            highlight: ['python', 'bash'],
+            nav: [
+                // { title: 'Feature List', link: window.location.origin + '/' },
+                // { title: 'API List', link: moduleUrl },
+                // { title: 'GitLab', link: repoUrl },
+                // { title: 'Github(For CI/CD only)', link: githubrepoUrl }
+            ],
+            sidebar: [
+                { title: 'Introduction', link: '/' },
+                { title: 'Ckpt 1', link: '/ckpt1.md' },
+                { title: 'Ckpt 2', link: '/ckpt2.md' },
+                { title: 'Engine Doc', link: '/engine.md' },
+                { title: 'Engine Doc (CN)', link: '/engine-cn.md' },
+            ],
+        })
+    </script>
+</body>
+
+</html>
