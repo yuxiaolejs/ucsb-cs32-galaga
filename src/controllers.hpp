@@ -37,9 +37,9 @@ namespace game
         const float MAX_VERTI_COORD = 5;
 
         const float COLLISION_BOX_RADIUS = 0.7;
-        const size_t ENERMY_SHIPS_IN_A_GEN = 7;
+        const size_t ENERMY_SHIPS_IN_A_GEN = 10;
 
-        int framesPerShipGeneration = 30;
+        int framesPerShipGeneration = 80;
         int framesSinceLastShipGeneration = 0;
 
         void generateEnermyShips();

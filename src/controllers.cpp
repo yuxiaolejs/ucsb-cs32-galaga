@@ -30,8 +30,8 @@ void game::StartScreenController::tick()
     else if (counter <= 20)
         dir = true;
     game::layers[0].shapes[2].opacity = (float)counter / 100.0;
-    game::layers[0].shapes[2].x = (float)counter / 100.0;
-    game::layers[0].shapes[1].x = -(float)counter / 100.0;
+    // game::layers[0].shapes[2].x = (float)counter / 100.0;
+    // game::layers[0].shapes[1].x = -(float)counter / 100.0;
 }
 void game::StartScreenController::init()
 {
@@ -65,6 +65,8 @@ void game::StartScreenController::init()
     shape.height = 1;
 
     game::layers[0].shapes.push_back(shape);
+
+    srand(game::UTILS::getTimestamp()%10000);
 }
 
 void game::StartScreenController::exit()
@@ -121,6 +123,7 @@ void game::TestController::collisionDetection()
         {
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
+            quit = true;
             delete layersLock;
         }
     }
@@ -136,12 +139,13 @@ void game::TestController::generateEnermyShips()
     framesSinceLastShipGeneration = 0;
 
     game::RES::Shape shape;
-    for (size_t i = 0; i < ENERMY_SHIPS_IN_A_GEN; i++)
+    size_t shipsToGen = (rand() % ENERMY_SHIPS_IN_A_GEN)/2;
+    for (size_t i = 0; i < shipsToGen; i++)
     {
         shape = game::RES::Shape();
         shape.texture = game::textureManager.getTexture("ship1"); // Enermy ship
         shape.x = 10;
-        shape.y = (float)i - ((float)ENERMY_SHIPS_IN_A_GEN / 2.0);
+        shape.y = (float)(rand() % 13) - ((float)ENERMY_SHIPS_IN_A_GEN / 2.0);
         shape.width = 1;
         shape.height = 1;
         shape.rotation = 90;
