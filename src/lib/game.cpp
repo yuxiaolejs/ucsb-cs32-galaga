@@ -40,6 +40,7 @@ void game::Controller::_start()
 {
     while (true)
     {
+        uint64_t tickStart = game::UTILS::highResTimestamp();
         if (quit)
         {
             this->exit();
@@ -47,9 +48,10 @@ void game::Controller::_start()
                 callback();
             return;
         }
-
         this->tick();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / TICK_RATE));
+        uint64_t tickDelay = game::UTILS::highResTimestamp() - tickStart;
+        if (tickDelay < TICK_DELAY)
+            std::this_thread::sleep_for(std::chrono::nanoseconds(TICK_DELAY - tickDelay));
     }
 }
 

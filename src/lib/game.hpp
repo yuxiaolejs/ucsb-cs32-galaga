@@ -21,7 +21,7 @@ namespace game
 
         std::thread controllerThread;
         std::function<void()> callback;
-        const int TICK_RATE = 60;
+        uint64_t TICK_DELAY = 16 * 1000 * 1000; // Nanoseconds
         bool quit = false;
     };
     extern std::map<int, game::RES::Layer> layers;
