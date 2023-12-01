@@ -6,16 +6,15 @@ find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(PNG REQUIRED)
 set(CMAKE_CXX_FLAGS "-g")
+file(GLOB ENGINE_LIB
+     "src/lib/*.cpp"
+)
+file(GLOB GAME_BIZ
+     "src/*.cpp"
+)
 add_executable(ezg
-    src/main.cpp
-    src/controllers.cpp
-    src/lib/ui.cpp
-    src/lib/shape.cpp
-    src/lib/texture.cpp
-    src/lib/utils.cpp
-    src/lib/game.cpp
-    src/lib/layer.cpp
-    src/lib/event.cpp
+    ${GAME_BIZ}
+    ${ENGINE_LIB}
 )
 target_link_libraries(ezg glut OpenGL::GL OpenGL::GLU)
 target_link_libraries(ezg png)
