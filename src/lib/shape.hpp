@@ -9,6 +9,7 @@ namespace game::RES
     class Shape
     {
     public:
+        static u_int32_t idCounter;
         Shape();
         float width;
         float height;

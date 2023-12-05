@@ -32,6 +32,19 @@ namespace game::projectile
         void tick();
     };
 
+    class SmartProjectile : public Projectile
+    {
+    public:
+        SmartProjectile();
+        SmartProjectile(Vec2 position, bool isAlly, u_int32_t target, Layer *targetLayer);
+
+        void tick();
+
+    private:
+        u_int32_t target;
+        Layer *targetLayer;
+    };
+
     class ProjectileManager
     {
     public:
@@ -45,6 +58,8 @@ namespace game::projectile
 
         void spawnStupidProjectile(Vec2 position, bool isAlly);
         void spawnStupidProjectile(Vec2 position, bool isAlly, Vec2 velocity);
+
+        void spawnSmartProjectile(Vec2 position, bool isAlly, u_int32_t target, Layer *_targetLayer);
 
         bool collisionDetection(Shape &shape, bool isAlly);
 

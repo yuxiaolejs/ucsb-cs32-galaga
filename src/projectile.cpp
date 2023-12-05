@@ -6,6 +6,8 @@
 #include "lib/texture.hpp"
 #include <mutex>
 #include <thread>
+#include <iostream>
+#include <sstream>
 
 using game::RES::Layer;
 using game::RES::Shape;
@@ -41,6 +43,48 @@ void StupidProjectile::tick()
 {
     ttl--;
     position = position + velocity;
+}
+
+SmartProjectile::SmartProjectile() : Projectile() {}
+
+SmartProjectile::SmartProjectile(Vec2 position, bool isAlly, u_int32_t target, Layer *targetLayer) : Projectile()
+{
+    this->position = position;
+    this->isAlly = isAlly;
+    this->targetLayer = targetLayer;
+    this->target = target;
+}
+
+void SmartProjectile::tick()
+{
+    ttl--;
+    position = position + velocity;
+    if (!targetLayer)
+    {
+        velocity = Vec2(0, -0.1);
+        return;
+    }
+    std::ostringstream oss;
+    oss << "Looking for target: " << target << std::endl;
+    Shape *_target = nullptr;
+    for (size_t i = 0; i < targetLayer->shapes.size(); i++)
+    {
+        oss << ": " << targetLayer->shapes[i].id << std::endl;
+        if (targetLayer->shapes[i].id == target)
+        {
+            _target = &(targetLayer->shapes[i]);
+            break;
+        }
+    }
+    if (!_target)
+    {
+        std::cout << oss.str();
+        velocity = Vec2(0, 0.1);
+        return;
+    }
+    Vec2 targetPosition = Vec2(_target->x, _target->y);
+    Vec2 positionDiff = targetPosition - position;
+    velocity = positionDiff / positionDiff.magnitude() * 0.03;
 }
 
 ProjectileManager::ProjectileManager(Layer *targetLayer) : targetLayer(targetLayer){};
@@ -87,7 +131,7 @@ void ProjectileManager::updateProjectile(size_t idx)
         return;
     targetLayer->shapes[idx].x = projectiles[idx]->position.x;
     targetLayer->shapes[idx].y = projectiles[idx]->position.y;
-    targetLayer->shapes[idx].rotation = projectiles[idx]->velocity.getAngleDeg();
+    targetLayer->shapes[idx].rotation = projectiles[idx]->velocity.getAngleDeg() - 90;
 }
 
 void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly)
@@ -111,6 +155,21 @@ void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly, Vec2 v
     projectiles.push_back(new StupidProjectile(position, isAlly, velocity));
     Shape shape;
     shape.texture = game::textureManager.getTexture("proj1");
+    shape.x = position.x;
+    shape.y = position.y;
+    shape.width = 0.5;
+    shape.height = 0.5;
+    shape.rotation = 0;
+    targetLayer->shapes.push_back(shape);
+    delete layersLock;
+}
+
+void ProjectileManager::spawnSmartProjectile(Vec2 position, bool isAlly, u_int32_t target, Layer *_targetLayer)
+{
+    std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
+    projectiles.push_back(new SmartProjectile(position, isAlly, target, _targetLayer));
+    Shape shape;
+    shape.texture = game::textureManager.getTexture("proj2");
     shape.x = position.x;
     shape.y = position.y;
     shape.width = 0.5;

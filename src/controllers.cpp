@@ -151,7 +151,7 @@ void game::TestController::collisionDetection()
     bool ourShipHit = projectileManager.collisionDetection(ourShip, true);
     if (ourShipHit)
     {
-        quit = true;
+        // quit = true;
         return;
     }
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
@@ -161,7 +161,7 @@ void game::TestController::collisionDetection()
         {
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
-            quit = true;
+            // quit = true;
             delete layersLock;
         }
         // Is enermy ship hit by our projectiles?
@@ -209,6 +209,10 @@ void game::TestController::generateProjectiles()
     if (frameCount % FRAMES_PER_ENERMY_PROJECTILE_GEN == 0) // Generate enermy projectiles
         for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
             this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[i].x, shipVec[i].y), false);
+
+    if (frameCount % 100 == 0) // Generate enermy projectiles
+        for (size_t i = 1; i < 2; i++)
+            this->projectileManager.spawnSmartProjectile(game::vec::Vec2(shipVec[i].x, shipVec[i].y), false, shipVec[0].id, &game::layers[1]);
 }
 
 void game::TestController::init()

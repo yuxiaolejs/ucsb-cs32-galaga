@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
     game::textureManager.loadAllTextures();
 
-    game::PERF::performanceManager.start(); // Comment this line to disable performance manager
+    // game::PERF::performanceManager.start(); // Comment this line to disable performance manager
 
     game::StartScreenController controller;
     game::TestController controller2;
