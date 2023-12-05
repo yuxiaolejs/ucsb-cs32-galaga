@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     game::textureManager.loadAllTextures();
 
     game::fontTextureManager.changePath("res/font1/");
-    game::fontTextureManager.loadAllTextures();
+    game::fontTextureManager.loadAllTextures(true, 255, 255, 255);
 
     // game::PERF::performanceManager.start(); // Comment this line to disable performance manager
 

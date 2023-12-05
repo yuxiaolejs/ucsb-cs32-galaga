@@ -10,6 +10,7 @@ namespace game::RES
         Texture();
         ~Texture();
         Texture(std::string fileName);
+        Texture(std::string fileName, float r, float g, float b);
         std::string fileName;
         int width;
         int height;
@@ -19,7 +20,7 @@ namespace game::RES
 
     private:
         void initTexture();
-        bool loadPngImage();
+        bool loadPngImage(bool overrideColor = false, uint8_t r = 0, uint8_t g = 0, uint8_t b = 0);
     };
 
     class TextureManager
@@ -28,7 +29,7 @@ namespace game::RES
         TextureManager();
         ~TextureManager();
         Texture &getTexture(std::string fileName);
-        void loadAllTextures();
+        void loadAllTextures(bool overrideColor = false, uint8_t r = 0, uint8_t g = 0, uint8_t b = 0);
         void changePath(std::string path);
 
     private:

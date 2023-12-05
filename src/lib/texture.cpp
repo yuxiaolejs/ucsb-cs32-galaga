@@ -47,6 +47,36 @@ game::RES::Texture::Texture(std::string fileName)
     free(*this->data);
     delete this->data;
 }
+
+game::RES::Texture::Texture(std::string fileName, float r, float g, float b)
+{
+    this->width = 0;
+    this->height = 0;
+    this->hasAlpha = false;
+    this->textureID = 0;
+
+    this->data = new GLubyte *; // Init data pointer, possible memory leak
+
+    this->fileName = fileName;
+    if (!this->loadPngImage(true, r, g, b))
+    {
+        std::cerr << "Error reading texture: " << fileName << std::endl;
+        this->textureID = 0;
+        return;
+    }
+    this->initTexture();
+    if (!glIsTexture(this->textureID))
+    {
+        std::cerr << "Error loading texture: " << fileName << std::endl;
+        this->textureID = 0;
+        free(*this->data);
+        delete this->data;
+        return;
+    }
+    free(*this->data);
+    delete this->data;
+}
+
 void game::RES::Texture::initTexture()
 {
     glGenTextures(1, &(this->textureID));
@@ -58,7 +88,7 @@ void game::RES::Texture::initTexture()
     else
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGB, GL_UNSIGNED_BYTE, *this->data);
 }
-bool game::RES::Texture::loadPngImage()
+bool game::RES::Texture::loadPngImage(bool overrideColor, uint8_t r, uint8_t g, uint8_t b)
 {
     png_structp png_ptr;
     png_infop info_ptr;
@@ -171,7 +201,22 @@ bool game::RES::Texture::loadPngImage()
         // note that png is ordered top to
         // bottom, but OpenGL expect it bottom to top
         // so the order or swapped
-        memcpy(*data + (row_bytes * (height - 1 - i)), row_pointers[i], row_bytes);
+        if (overrideColor && hasAlpha)
+        {
+            for (int j = 0; j < row_bytes; j++)
+            {
+                if (j % 4 == 0)
+                    (*data)[(row_bytes * (height - 1 - i)) + j] = r;
+                else if (j % 4 == 1)
+                    (*data)[(row_bytes * (height - 1 - i)) + j] = g;
+                else if (j % 4 == 2)
+                    (*data)[(row_bytes * (height - 1 - i)) + j] = b;
+                else
+                    (*data)[(row_bytes * (height - 1 - i)) + j] = row_pointers[i][j];
+            }
+        }
+        else
+            memcpy(*data + (row_bytes * (height - 1 - i)), row_pointers[i], row_bytes);
     }
 
     // for (int i = 0; i < row_bytes * height; i++)
@@ -206,7 +251,7 @@ game::RES::TextureManager::TextureManager()
 game::RES::TextureManager::~TextureManager()
 {
 }
-void game::RES::TextureManager::loadAllTextures()
+void game::RES::TextureManager::loadAllTextures(bool overrideColor, uint8_t r, uint8_t g, uint8_t b)
 {
     for (const auto &file : std::filesystem::directory_iterator(texturesPath))
     {
@@ -216,7 +261,10 @@ void game::RES::TextureManager::loadAllTextures()
         // remove extension
         fileName.erase(fileName.find_last_of("."), std::string::npos);
         std::cout << "Loading texture: " << fileName << std::endl;
-        this->textures.insert({fileName, Texture(texturesPath + fileName + ".png")});
+        if (overrideColor)
+            this->textures.insert({fileName, Texture(texturesPath + fileName + ".png", r, g, b)});
+        else
+            this->textures.insert({fileName, Texture(texturesPath + fileName + ".png")});
     }
 }
 game::RES::Texture &game::RES::TextureManager::getTexture(std::string fileName)
