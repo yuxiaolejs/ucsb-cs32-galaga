@@ -3,6 +3,7 @@
 #include "lib/game.hpp"
 #include "lib/shape.hpp"
 #include "projectile.hpp"
+#include "text.hpp"
 #include "vec.hpp"
 using game::vec::Vec2;
 namespace game
@@ -53,6 +54,11 @@ namespace game
         uint64_t frameCount = 0;
 
         Vec2 shipVelocity;
+
+        uint32_t score = 0;
+
+        // Components:
+        game::RES::Text scoreText;
 
         // FUNCTIONS
         void calcVelocity();

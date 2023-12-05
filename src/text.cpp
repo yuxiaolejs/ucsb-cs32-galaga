@@ -4,6 +4,8 @@
 #include "lib/game.hpp"
 #include "lib/layer.hpp"
 #include <string>
+#include <thread>
+#include <mutex>
 
 using namespace game::RES;
 
@@ -37,6 +39,7 @@ void Text::setRatio(float ratio)
 
 void Text::draw(Layer *layer)
 {
+    std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     std::vector<Shape> &shapes = layer->shapes;
     shapes.clear();
     float x = this->x;
@@ -65,4 +68,5 @@ void Text::draw(Layer *layer)
         shapes.push_back(shape);
         x += size;
     }
+    delete layersLock;
 }

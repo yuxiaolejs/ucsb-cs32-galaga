@@ -131,6 +131,9 @@ void game::TestController::tick()
     // game::layers[1].shapes[0].rotation -= rotationSpeed;
     // game::layers[1].shapes[0].x += 0.005;
     frameCount++;
+    this->score++;
+    scoreText.setText("Score: " + std::to_string(score));
+    scoreText.draw(&game::layers[301]);
 }
 
 void game::TestController::moveBackground()
@@ -247,9 +250,9 @@ void game::TestController::init()
     this->projectileManager = game::projectile::ProjectileManager(&game::layers[201]);
 
     game::layers.insert({301, game::RES::Layer()}); // Layer of score
-    game::RES::Text text;
-    text.setText("Score: 0");
-    text.draw(&game::layers[301]);
+    scoreText.setRatio(2.3);
+    scoreText.setSize(0.2);
+    scoreText.setPos(-9.5, -5);
 }
 
 bool game::TestController::outOfBound(game::RES::Shape &shape)
