@@ -134,6 +134,8 @@ void game::TestController::tick()
     this->score++;
     scoreText.setText("Score: " + std::to_string(score));
     scoreText.draw(&game::layers[301]);
+    hpText.setText("HP: " + std::to_string(hp));
+    hpText.draw(&game::layers[302]);
 }
 
 void game::TestController::moveBackground()
@@ -156,6 +158,7 @@ void game::TestController::collisionDetection()
     if (ourShipHit)
     {
         // quit = true;
+        hp--;
         return;
     }
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
@@ -165,6 +168,7 @@ void game::TestController::collisionDetection()
         {
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
+            hp--;
             // quit = true;
             delete layersLock;
         }
@@ -175,9 +179,17 @@ void game::TestController::collisionDetection()
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
             this->score += 1000;
+            hp++;
             delete layersLock;
         }
     }
+    this->hpVerification();
+}
+
+void game::TestController::hpVerification()
+{
+    if (hp == 0)
+        quit = true;
 }
 
 void game::TestController::generateEnermyShips()
@@ -251,9 +263,15 @@ void game::TestController::init()
     this->projectileManager = game::projectile::ProjectileManager(&game::layers[201]);
 
     game::layers.insert({301, game::RES::Layer()}); // Layer of score
+    game::layers.insert({302, game::RES::Layer()}); // Layer of hp
+
     scoreText.setRatio(2.3);
     scoreText.setSize(0.2);
     scoreText.setPos(-9.5, -5);
+
+    hpText.setRatio(2.3);
+    hpText.setSize(0.2);
+    hpText.setPos(-9.5, -4.6);
 }
 
 bool game::TestController::outOfBound(game::RES::Shape &shape)

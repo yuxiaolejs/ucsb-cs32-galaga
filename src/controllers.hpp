@@ -56,9 +56,11 @@ namespace game
         Vec2 shipVelocity;
 
         uint32_t score = 0;
+        uint8_t hp = 10;
 
         // Components:
         game::RES::Text scoreText;
+        game::RES::Text hpText;
 
         // FUNCTIONS
         void calcVelocity();
@@ -68,6 +70,8 @@ namespace game
         void generateProjectiles();
 
         void collisionDetection();
+
+        void hpVerification();
 
         bool outOfBound(game::RES::Shape &shape);
 
