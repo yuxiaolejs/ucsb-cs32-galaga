@@ -66,7 +66,7 @@ void game::StartScreenController::init()
 
     game::layers[0].shapes.push_back(shape);
 
-    srand(game::UTILS::getTimestamp()%10000);
+    srand(game::UTILS::getTimestamp() % 10000);
 }
 
 void game::StartScreenController::exit()
@@ -108,9 +108,12 @@ void game::TestController::tick()
     }
     delete layersLock;
     this->generateEnermyShips();
+    this->generateProjectiles();
     this->collisionDetection();
+    this->projectileManager.tick();
     // game::layers[1].shapes[0].rotation -= rotationSpeed;
     // game::layers[1].shapes[0].x += 0.005;
+    frameCount++;
 }
 
 void game::TestController::collisionDetection()
@@ -139,7 +142,7 @@ void game::TestController::generateEnermyShips()
     framesSinceLastShipGeneration = 0;
 
     game::RES::Shape shape;
-    size_t shipsToGen = (rand() % ENERMY_SHIPS_IN_A_GEN)/2;
+    size_t shipsToGen = (rand() % ENERMY_SHIPS_IN_A_GEN) / 2;
     for (size_t i = 0; i < shipsToGen; i++)
     {
         shape = game::RES::Shape();
@@ -152,6 +155,17 @@ void game::TestController::generateEnermyShips()
 
         game::layers[1].shapes.push_back(shape);
     }
+}
+
+void game::TestController::generateProjectiles()
+{
+    auto &shipVec = game::layers[1].shapes;
+    if (frameCount % FRAMES_PER_ALLY_PROJECTILE_GEN == 0) // Generate ally projectiles
+        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true);
+
+    if (frameCount % FRAMES_PER_ENERMY_PROJECTILE_GEN == 0) // Generate enermy projectiles
+        for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
+            this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[i].x, shipVec[i].y), false);
 }
 
 void game::TestController::init()
@@ -177,6 +191,10 @@ void game::TestController::init()
     shape.rotation = -90;
 
     game::layers[1].shapes.push_back(shape);
+
+    game::layers.insert({201, game::RES::Layer()}); // Layer of projectiles (DO NOT TOUCH)
+
+    this->projectileManager = game::projectile::ProjectileManager(&game::layers[201]);
 }
 
 bool game::TestController::outOfBound(game::RES::Shape &shape)

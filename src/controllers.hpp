@@ -2,6 +2,7 @@
 #define CONTROLLERS_HPP
 #include "lib/game.hpp"
 #include "lib/shape.hpp"
+#include "projectile.hpp"
 namespace game
 {
     class StartScreenController : public Controller
@@ -38,16 +39,23 @@ namespace game
 
         const float COLLISION_BOX_RADIUS = 0.7;
         const size_t ENERMY_SHIPS_IN_A_GEN = 10;
+        const size_t FRAMES_PER_ALLY_PROJECTILE_GEN = 10;
+        const size_t FRAMES_PER_ENERMY_PROJECTILE_GEN = 30;
 
         int framesPerShipGeneration = 80;
         int framesSinceLastShipGeneration = 0;
 
+        uint64_t frameCount = 0;
+
         void generateEnermyShips();
-        void generateAllyProjectile();
+        void generateProjectiles();
 
         void collisionDetection();
 
+
         bool outOfBound(game::RES::Shape &shape);
+        
+        game::projectile::ProjectileManager projectileManager;
     };
 }
 #endif

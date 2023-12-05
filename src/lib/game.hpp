@@ -2,6 +2,13 @@
 #define GAME_HPP
 #include <thread>
 #include <functional>
+#include <map>
+#include <mutex>
+#include "texture.hpp"
+#include "layer.hpp"
+#include "event.hpp"
+#include "shape.hpp"
+
 namespace game
 {
     class Controller
