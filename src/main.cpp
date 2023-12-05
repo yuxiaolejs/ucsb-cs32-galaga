@@ -36,10 +36,11 @@ int main(int argc, char **argv)
             // glutLeaveMainLoop();
         controller2.start(); });
 
-    controller2.then([]()
+    controller2.then([&]()
                      {
         std::cout << "Controller2 CALLLLLED" << std::endl;
-            glutLeaveMainLoop(); });
+            glutLeaveMainLoop();
+            std::cout << controller2.getScore() << std::endl; });
 
     game::UI::start();
 

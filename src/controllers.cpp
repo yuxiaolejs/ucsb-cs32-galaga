@@ -284,3 +284,8 @@ void game::TestController::exit()
     std::cout << "TestController exit" << std::endl;
     game::layers.clear();
 }
+
+uint32_t game::TestController::getScore()
+{
+    return this->score;
+}

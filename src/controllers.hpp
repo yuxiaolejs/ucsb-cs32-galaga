@@ -28,7 +28,8 @@ namespace game
     {
     public:
         TestController() : Controller(){};
-
+        uint32_t getScore();
+       
     private:
         void tick();
         void init();
