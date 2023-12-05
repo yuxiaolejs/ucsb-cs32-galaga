@@ -37,6 +37,10 @@ namespace game::vec
         {
             return atan2(-y, x) * 180 / M_PI;
         }
+        float magnitude()
+        {
+            return sqrt(x * x + y * y);
+        }
     };
 }
 #endif

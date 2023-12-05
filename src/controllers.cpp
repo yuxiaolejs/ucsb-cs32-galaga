@@ -89,7 +89,7 @@ void game::TestController::tick()
     // Continuous key press detection - press to move our ship
     auto &eqk = game::eventQueue.pressedKeys; // Shorten the stupid long name of a game variable
     auto &ourShip = game::layers[1].shapes[0];
-    shipVelocity = Vec2(0.1, 0);
+    shipVelocity = Vec2(0.02, 0);
     if (eqk.find('w') != eqk.end() && ourShip.y > -MAX_VERTI_COORD)
     {
         game::layers[1].shapes[0].y -= 0.1;
@@ -125,10 +125,22 @@ void game::TestController::tick()
     this->generateEnermyShips();
     this->generateProjectiles();
     this->collisionDetection();
+    this->moveBackground();
     this->projectileManager.tick();
     // game::layers[1].shapes[0].rotation -= rotationSpeed;
     // game::layers[1].shapes[0].x += 0.005;
     frameCount++;
+}
+
+void game::TestController::moveBackground()
+{
+    if (game::layers[0].shapes[0].x < -20)
+    {
+        game::layers[0].shapes[0].x = 0;
+        game::layers[0].shapes[1].x = 20;
+    }
+    game::layers[0].shapes[0].x -= 0.02;
+    game::layers[0].shapes[1].x -= 0.02;
 }
 
 void game::TestController::collisionDetection()
@@ -192,7 +204,7 @@ void game::TestController::generateProjectiles()
 {
     auto &shipVec = game::layers[1].shapes;
     if (frameCount % FRAMES_PER_ALLY_PROJECTILE_GEN == 0) // Generate ally projectiles
-        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity);
+        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity / shipVelocity.magnitude() * 0.10);
 
     if (frameCount % FRAMES_PER_ENERMY_PROJECTILE_GEN == 0) // Generate enermy projectiles
         for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
@@ -209,6 +221,8 @@ void game::TestController::init()
     this->background.height = 11.5;
 
     game::layers.insert({0, game::RES::Layer()});
+    game::layers[0].shapes.push_back(this->background);
+    this->background.x = 20;
     game::layers[0].shapes.push_back(this->background);
 
     game::layers.insert({1, game::RES::Layer()}); // Layer of ships

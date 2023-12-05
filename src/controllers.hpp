@@ -56,6 +56,7 @@ namespace game
 
         // FUNCTIONS
         void calcVelocity();
+        void moveBackground();
 
         void generateEnermyShips();
         void generateProjectiles();
