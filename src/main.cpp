@@ -22,6 +22,9 @@ int main(int argc, char **argv)
 
     game::textureManager.loadAllTextures();
 
+    game::fontTextureManager.changePath("res/font1/");
+    game::fontTextureManager.loadAllTextures();
+
     // game::PERF::performanceManager.start(); // Comment this line to disable performance manager
 
     game::StartScreenController controller;

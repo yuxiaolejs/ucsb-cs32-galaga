@@ -228,3 +228,8 @@ game::RES::Texture &game::RES::TextureManager::getTexture(std::string fileName)
     }
     return this->textures[fileName];
 }
+
+void game::RES::TextureManager::changePath(std::string path)
+{
+    this->texturesPath = path;
+}

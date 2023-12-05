@@ -6,6 +6,7 @@
 #include "lib/game.hpp"
 #include "lib/utils.hpp"
 #include "controllers.hpp"
+#include "text.hpp"
 
 #include <GL/freeglut.h>
 #include <mutex>
@@ -244,6 +245,11 @@ void game::TestController::init()
     game::layers.insert({201, game::RES::Layer()}); // Layer of projectiles (DO NOT TOUCH)
 
     this->projectileManager = game::projectile::ProjectileManager(&game::layers[201]);
+
+    game::layers.insert({301, game::RES::Layer()}); // Layer of score
+    game::RES::Text text;
+    text.setText("Score: 0");
+    text.draw(&game::layers[301]);
 }
 
 bool game::TestController::outOfBound(game::RES::Shape &shape)

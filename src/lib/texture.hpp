@@ -29,10 +29,11 @@ namespace game::RES
         ~TextureManager();
         Texture &getTexture(std::string fileName);
         void loadAllTextures();
+        void changePath(std::string path);
 
     private:
         std::map<std::string, Texture> textures;
-        const std::string texturesPath = "res/";
+        std::string texturesPath = "res/";
     };
 }
 #endif
