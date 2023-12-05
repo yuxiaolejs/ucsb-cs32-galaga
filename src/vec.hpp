@@ -35,7 +35,7 @@ namespace game::vec
         }
         float getAngleDeg()
         {
-            return atan2(y, x) * 180 / M_PI;
+            return atan2(-y, x) * 180 / M_PI;
         }
     };
 }

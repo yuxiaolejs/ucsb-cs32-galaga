@@ -3,6 +3,8 @@
 #include "lib/game.hpp"
 #include "lib/shape.hpp"
 #include "projectile.hpp"
+#include "vec.hpp"
+using game::vec::Vec2;
 namespace game
 {
     class StartScreenController : public Controller
@@ -32,6 +34,7 @@ namespace game
         void exit();
 
         // User defined
+        // CONSTANTS
         float rotationSpeed = 1.0;
 
         const float MAX_HORIZ_COORD = 10;
@@ -43,18 +46,23 @@ namespace game
         const size_t FRAMES_PER_ENERMY_PROJECTILE_GEN = 30;
 
         int framesPerShipGeneration = 80;
+        // VARIABLES
         int framesSinceLastShipGeneration = 0;
 
         uint64_t frameCount = 0;
+
+        Vec2 shipVelocity;
+
+        // FUNCTIONS
+        void calcVelocity();
 
         void generateEnermyShips();
         void generateProjectiles();
 
         void collisionDetection();
 
-
         bool outOfBound(game::RES::Shape &shape);
-        
+
         game::projectile::ProjectileManager projectileManager;
     };
 }

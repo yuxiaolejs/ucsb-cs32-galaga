@@ -26,6 +26,7 @@ namespace game::projectile
     public:
         StupidProjectile();
         StupidProjectile(Vec2 position, bool isAlly);
+        StupidProjectile(Vec2 position, bool isAlly, Vec2 velocity);
 
         void tick();
     };
@@ -42,6 +43,7 @@ namespace game::projectile
         void updateProjectile(size_t idx);
 
         void spawnStupidProjectile(Vec2 position, bool isAlly);
+        void spawnStupidProjectile(Vec2 position, bool isAlly, Vec2 velocity);
 
         bool collisionDetection(Shape &shape, bool isAlly);
 

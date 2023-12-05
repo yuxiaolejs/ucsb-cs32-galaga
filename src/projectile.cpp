@@ -30,6 +30,13 @@ StupidProjectile::StupidProjectile(Vec2 position, bool isAlly) : Projectile()
         this->velocity = Vec2(-0.1, 0);
 }
 
+StupidProjectile::StupidProjectile(Vec2 position, bool isAlly, Vec2 velocity) : Projectile()
+{
+    this->position = position;
+    this->isAlly = isAlly;
+    this->velocity = velocity;
+}
+
 void StupidProjectile::tick()
 {
     position = position + velocity;
@@ -86,6 +93,21 @@ void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly)
 {
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     projectiles.push_back(new StupidProjectile(position, isAlly));
+    Shape shape;
+    shape.texture = game::textureManager.getTexture("proj1");
+    shape.x = position.x;
+    shape.y = position.y;
+    shape.width = 0.5;
+    shape.height = 0.5;
+    shape.rotation = 0;
+    targetLayer->shapes.push_back(shape);
+    delete layersLock;
+}
+
+void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly, Vec2 velocity)
+{
+    std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
+    projectiles.push_back(new StupidProjectile(position, isAlly, velocity));
     Shape shape;
     shape.texture = game::textureManager.getTexture("proj1");
     shape.x = position.x;

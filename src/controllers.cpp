@@ -11,7 +11,8 @@
 #include <mutex>
 #include <thread>
 #include <cstdlib>
-
+#include "vec.hpp"
+using game::vec::Vec2;
 void game::StartScreenController::tick()
 {
     if (!game::eventQueue.empty())
@@ -88,15 +89,29 @@ void game::TestController::tick()
     // Continuous key press detection - press to move our ship
     auto &eqk = game::eventQueue.pressedKeys; // Shorten the stupid long name of a game variable
     auto &ourShip = game::layers[1].shapes[0];
+    shipVelocity = Vec2(0.1, 0);
     if (eqk.find('w') != eqk.end() && ourShip.y > -MAX_VERTI_COORD)
+    {
         game::layers[1].shapes[0].y -= 0.1;
+        shipVelocity.y -= 0.1;
+    }
     if (eqk.find('s') != eqk.end() && ourShip.y < MAX_VERTI_COORD)
+    {
         game::layers[1].shapes[0].y += 0.1;
+        shipVelocity.y += 0.1;
+    }
     if (eqk.find('a') != eqk.end() && ourShip.x > -MAX_HORIZ_COORD)
+    {
         game::layers[1].shapes[0].x -= 0.1;
+        shipVelocity.x -= 0.1;
+    }
     if (eqk.find('d') != eqk.end() && ourShip.x < MAX_HORIZ_COORD)
+    {
         game::layers[1].shapes[0].x += 0.1;
-
+        shipVelocity.x += 0.1;
+    }
+    game::layers[1].shapes[0].rotation = shipVelocity.getAngleDeg() - 90;
+    // Move all enermy ships
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
     {
@@ -177,7 +192,7 @@ void game::TestController::generateProjectiles()
 {
     auto &shipVec = game::layers[1].shapes;
     if (frameCount % FRAMES_PER_ALLY_PROJECTILE_GEN == 0) // Generate ally projectiles
-        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true);
+        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity);
 
     if (frameCount % FRAMES_PER_ENERMY_PROJECTILE_GEN == 0) // Generate enermy projectiles
         for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
