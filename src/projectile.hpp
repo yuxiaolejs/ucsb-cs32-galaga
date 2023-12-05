@@ -38,6 +38,9 @@ namespace game::projectile
         SmartProjectile();
         SmartProjectile(Vec2 position, bool isAlly, u_int32_t target, Layer *targetLayer);
 
+        Vec2 prevDiff;
+        Vec2 intgDiff;
+
         void tick();
 
     private:

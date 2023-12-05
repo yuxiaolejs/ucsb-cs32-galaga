@@ -64,12 +64,9 @@ void SmartProjectile::tick()
         velocity = Vec2(0, -0.1);
         return;
     }
-    std::ostringstream oss;
-    oss << "Looking for target: " << target << std::endl;
     Shape *_target = nullptr;
     for (size_t i = 0; i < targetLayer->shapes.size(); i++)
     {
-        oss << ": " << targetLayer->shapes[i].id << std::endl;
         if (targetLayer->shapes[i].id == target)
         {
             _target = &(targetLayer->shapes[i]);
@@ -78,13 +75,17 @@ void SmartProjectile::tick()
     }
     if (!_target)
     {
-        std::cout << oss.str();
         velocity = Vec2(0, 0.1);
         return;
     }
     Vec2 targetPosition = Vec2(_target->x, _target->y);
-    Vec2 positionDiff = targetPosition - position;
-    velocity = positionDiff / positionDiff.magnitude() * 0.03;
+    // Use PID algorithm to calculate velocity
+    Vec2 P = targetPosition - position;
+    Vec2 D = P - prevDiff;
+    Vec2 I = intgDiff + P / 10.00;
+    velocity = P * 0.004 + D * 0.0015 + I * 0.0015;
+    prevDiff = P;
+    intgDiff = I;
 }
 
 ProjectileManager::ProjectileManager(Layer *targetLayer) : targetLayer(targetLayer){};
