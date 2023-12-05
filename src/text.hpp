@@ -14,10 +14,12 @@ namespace game::RES
         void setPos(float x, float y);
         void setSize(float size);
         void draw(Layer *layer);
+        void setRatio(float ratio);
 
     private:
         std::string text;
         float x, y, size;
+        float ratio = 2;
     };
 }
 #endif

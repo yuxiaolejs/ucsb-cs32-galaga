@@ -30,6 +30,11 @@ void Text::setSize(float size)
     this->size = size;
 }
 
+void Text::setRatio(float ratio)
+{
+    this->ratio = ratio;
+}
+
 void Text::draw(Layer *layer)
 {
     std::vector<Shape> &shapes = layer->shapes;
@@ -45,6 +50,8 @@ void Text::draw(Layer *layer)
             continue;
         }
         std::string fileName = std::string(1, c);
+        if (c == ':')
+            fileName = "col";
         if (!isalpha(c) || !islower(c))
         {
             fileName = "u" + fileName;
@@ -54,7 +61,7 @@ void Text::draw(Layer *layer)
         shape.x = x;
         shape.y = y;
         shape.width = size;
-        shape.height = size * 2;
+        shape.height = size * ratio;
         shapes.push_back(shape);
         x += size;
     }
