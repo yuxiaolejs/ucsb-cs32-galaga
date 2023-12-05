@@ -120,13 +120,29 @@ void game::TestController::collisionDetection()
 {
     auto &ourShip = game::layers[1].shapes[0];
     auto &shipVec = game::layers[1].shapes;
+    // Is our ship hit by enermy projectiles?
+    bool ourShipHit = projectileManager.collisionDetection(ourShip, true);
+    if (ourShipHit)
+    {
+        quit = true;
+        return;
+    }
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
     {
+        // Is our ship hit by enermy ships?
         if (abs(ourShip.x - shipVec[i].x) < COLLISION_BOX_RADIUS && abs(ourShip.y - shipVec[i].y) < COLLISION_BOX_RADIUS)
         {
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
             quit = true;
+            delete layersLock;
+        }
+        // Is enermy ship hit by our projectiles?
+        bool enermyShipHit = projectileManager.collisionDetection(shipVec[i], false);
+        if (enermyShipHit)
+        {
+            std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
+            shipVec.erase(shipVec.begin() + i);
             delete layersLock;
         }
     }

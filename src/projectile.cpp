@@ -23,6 +23,7 @@ StupidProjectile::StupidProjectile() : Projectile(){};
 StupidProjectile::StupidProjectile(Vec2 position, bool isAlly) : Projectile()
 {
     this->position = position;
+    this->isAlly = isAlly;
     if (isAlly)
         this->velocity = Vec2(0.1, 0);
     else
@@ -37,6 +38,12 @@ void StupidProjectile::tick()
 ProjectileManager::ProjectileManager(Layer *targetLayer) : targetLayer(targetLayer){};
 
 ProjectileManager::ProjectileManager() : targetLayer(nullptr){};
+
+ProjectileManager::~ProjectileManager()
+{
+    for (size_t i = 0; i < projectiles.size(); i++)
+        delete projectiles[i];
+}
 
 void ProjectileManager::tick()
 {
@@ -88,4 +95,24 @@ void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly)
     shape.rotation = 0;
     targetLayer->shapes.push_back(shape);
     delete layersLock;
+}
+
+bool ProjectileManager::collisionDetection(Shape &shape, bool isAlly)
+{
+    for (size_t i = 0; i < projectiles.size(); i++)
+    {
+        if (projectiles[i]->isAlly == isAlly)
+            continue;
+        if (projectiles[i]->position.x < shape.x + shape.width / 2 &&
+            projectiles[i]->position.x > shape.x - shape.width / 2 &&
+            projectiles[i]->position.y < shape.y + shape.height / 2 &&
+            projectiles[i]->position.y > shape.y - shape.height / 2)
+        {
+            std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
+            deleteProjectile(i);
+            delete layersLock;
+            return true;
+        }
+    }
+    return false;
 }

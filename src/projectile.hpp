@@ -14,6 +14,7 @@ namespace game::projectile
     public:
         Vec2 position;
         Vec2 velocity;
+        bool isAlly;
 
         bool outOfBound();
 
@@ -34,12 +35,15 @@ namespace game::projectile
     public:
         ProjectileManager(Layer *targetLayer);
         ProjectileManager();
+        ~ProjectileManager();
 
         void tick();
         void deleteProjectile(size_t idx);
         void updateProjectile(size_t idx);
 
         void spawnStupidProjectile(Vec2 position, bool isAlly);
+
+        bool collisionDetection(Shape &shape, bool isAlly);
 
     private:
         std::vector<Projectile *> projectiles;
