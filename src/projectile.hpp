@@ -15,6 +15,7 @@ namespace game::projectile
         Vec2 position;
         Vec2 velocity;
         bool isAlly;
+        size_t ttl = 1000;
 
         bool outOfBound();
 

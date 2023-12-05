@@ -202,18 +202,18 @@ void game::TestController::generateProjectiles()
 void game::TestController::init()
 {
     std::cout << "TestController init" << std::endl;
+    this->background.texture = game::textureManager.getTexture("bg");
+    this->background.x = 0;
+    this->background.y = 0;
+    this->background.width = 20;
+    this->background.height = 11.5;
+
+    game::layers.insert({0, game::RES::Layer()});
+    game::layers[0].shapes.push_back(this->background);
+
+    game::layers.insert({1, game::RES::Layer()}); // Layer of ships
+
     game::RES::Shape shape;
-    shape.texture = game::textureManager.getTexture("bg");
-    shape.x = 0;
-    shape.y = 0;
-    shape.width = 20;
-    shape.height = 11.5;
-
-    game::layers.insert({1, game::RES::Layer()});
-    game::layers[0].shapes.push_back(shape);
-
-    game::layers.insert({0, game::RES::Layer()}); // Layer of ships
-
     shape.texture = game::textureManager.getTexture("ship1"); // Our ship
     shape.x = 0;
     shape.y = 0;

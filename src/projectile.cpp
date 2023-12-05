@@ -39,6 +39,7 @@ StupidProjectile::StupidProjectile(Vec2 position, bool isAlly, Vec2 velocity) : 
 
 void StupidProjectile::tick()
 {
+    ttl--;
     position = position + velocity;
 }
 
@@ -58,7 +59,7 @@ void ProjectileManager::tick()
     for (size_t i = 0; i < projectiles.size(); i++)
     {
         projectiles[i]->tick();
-        if (projectiles[i]->outOfBound())
+        if (projectiles[i]->outOfBound() || projectiles[i]->ttl == 0)
         {
             deleteProjectile(i);
             i--;

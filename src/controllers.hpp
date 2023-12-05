@@ -47,6 +47,7 @@ namespace game
 
         int framesPerShipGeneration = 80;
         // VARIABLES
+        Shape background;
         int framesSinceLastShipGeneration = 0;
 
         uint64_t frameCount = 0;
