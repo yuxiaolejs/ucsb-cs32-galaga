@@ -17,7 +17,7 @@ using namespace game::projectile;
 
 bool Projectile::outOfBound()
 {
-    return position.x > 10 || position.x < -10 || position.y > 5 || position.y < -5;
+    return position.x > 10 || position.x < -10 || position.y > 6 || position.y < -6;
 }
 
 StupidProjectile::StupidProjectile() : Projectile(){};
