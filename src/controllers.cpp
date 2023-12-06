@@ -322,13 +322,22 @@ void game::EndScreenController::renderLeaderboard()
 {
     game::RES::Text text;
     text.setRatio(2.3);
-    text.setSize(0.3);
-    text.setPos(-5, 2);
+    text.setSize(0.2);
+    text.setPos(-9.4, -4.4);
+    text.setText("Leaderboard:");
+    text.draw(&game::layers[302], false);
+    const int maxNameLength = 10;
     for (Json::Value::ArrayIndex i = 0; i < this->leaderboard.size(); i++)
     {
-        text.setText(this->leaderboard[i].get("name", "N/A").asString() + " " + std::to_string(this->leaderboard[i].get("score", 0).asUInt()));
+        std::string name = this->leaderboard[i].get("name", "N/A").asString();
+        std::string score = std::to_string(this->leaderboard[i].get("score", 0).asUInt());
+        if (name.length() > maxNameLength)
+            name = name.substr(0, maxNameLength);
+        text.setPos(-9.4, -4 + (i + 1) * 0.4);
+        text.setText(name + std::string(maxNameLength - name.length() + 1, '.') + " " + score);
         text.draw(&game::layers[302], false);
-        text.setPos(-5, 2 - (i + 1) * 0.5);
+        if (i > 18)
+            break;
     }
 }
 
