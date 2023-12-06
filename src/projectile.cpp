@@ -79,12 +79,24 @@ void SmartProjectile::tick()
         velocity = Vec2(0, 0.1);
         return;
     }
+
+    const float KP = 0.005;
+    const float KI = 0.0015;
+    const float KD = 0.002;
+    const float INTEGRAL_LIMIT = 50.0;
+
     Vec2 targetPosition = Vec2(_target->x, _target->y);
     // Use PID algorithm to calculate velocity
     Vec2 P = targetPosition - position;
     Vec2 D = P - prevDiff;
     Vec2 I = intgDiff + P / 10.00;
-    velocity = P * 0.004 + D * 0.0015 + I * 0.0015;
+
+    // Limit integral
+    if (I.magnitude() > INTEGRAL_LIMIT) {
+        I = I / I.magnitude() * INTEGRAL_LIMIT;
+    }
+
+    velocity = P * KP + I * KI + D * KD;
     prevDiff = P;
     intgDiff = I;
 }
