@@ -128,7 +128,7 @@ void ProjectileManager::tick()
         {
             if (projectiles[i]->ttl < explosionDuration)
                 continue;
-            updateProjectileTexture(i, "explode", 0.5, 0.5, 45);
+            updateProjectileTexture(i, "explode", 0.4, 0.4, 45);
         }
         else
         {
