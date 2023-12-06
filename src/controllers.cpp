@@ -70,6 +70,14 @@ void game::StartScreenController::init()
 
     game::layers[0].shapes.push_back(shape);
 
+    game::layers.insert({301, game::RES::Layer()}); // Layer of text
+    game::RES::Text text;
+    text.setRatio(2.3);
+    text.setSize(0.15);
+    text.setPos(4.3, 5.4);
+    text.setText(game::VERSION_NUMBER);
+    text.draw(&game::layers[301], false);
+
     srand(game::UTILS::getTimestamp() % 10000);
 }
 
@@ -348,6 +356,15 @@ void game::EndScreenController::init()
 
     game::layers[0].shapes.push_back(shape);
 
+    game::layers.insert({303, game::RES::Layer()}); // Layer of text
+
+    game::RES::Text text;
+    text.setRatio(2.3);
+    text.setSize(0.15);
+    text.setPos(4.3, 5.4);
+    text.setText(game::VERSION_NUMBER);
+    text.draw(&game::layers[303], false);
+
     game::layers.insert({301, game::RES::Layer()}); // Layer of score
     game::layers.insert({302, game::RES::Layer()}); // Layer of leaderboard
 
@@ -362,12 +379,12 @@ void game::EndScreenController::init()
     scoreText.setText(std::to_string(score));
     scoreText.draw(&game::layers[301], false);
 
-    game::RES::Text text;
-    text.setRatio(2.3);
-    text.setSize(0.2);
-    text.setPos(-9.4, -4 - 0.2 * 2);
-    text.setText("Leaderboard Loading...");
-    text.draw(&game::layers[302], false);
+    game::RES::Text text2;
+    text2.setRatio(2.3);
+    text2.setSize(0.2);
+    text2.setPos(-9.4, -4 - 0.2 * 2);
+    text2.setText("Leaderboard Loading...");
+    text2.draw(&game::layers[302], false);
 
     this->submitScore();
     this->leaderboard = game::HTTP::get(game::API_PREFIX + "/score");

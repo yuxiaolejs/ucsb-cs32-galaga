@@ -63,9 +63,6 @@ void game::UTILS::redirectCout(std::string filename)
               << " - Tianle Y." << std::endl
               << "\033[0;34m--------------------------------------------" << std::endl
               << "\033[1;32m"
-              << "   Project Documentation:\033[1;0m" << std::endl
-              << "      https://yuxiaolejs.github.io/ucsb-cs32-galaga" << std::endl
-              << "\033[1;32m"
               << "   Active API gateway:\033[1;0m" << std::endl
               << "      " << game::API_PREFIX << std::endl
               << "\033[1;32m"
@@ -73,9 +70,10 @@ void game::UTILS::redirectCout(std::string filename)
               << "      " << filename << std::endl
               << "\033[0;34m--------------------------------------------" << std::endl
               << "\033[1;32m"
-              << "   Rev. 0.0.3   Stable Build    12/06/23" << std::endl
+              << "   " << game::VERSION_NUMBER << std::endl
               << "\033[0;34m--------------------------------------------" << std::endl
-              << "\033[0;0m";
+              << "\033[0;0m"
+              << "https://yuxiaolejs.github.io/ucsb-cs32-galaga" << std::endl;
     // game::logFile.open(filename);
     // std::streambuf *coutbuf = std::cout.rdbuf();
     // std::cout.rdbuf(logFile.rdbuf());
