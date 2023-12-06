@@ -2,6 +2,7 @@
 #include <iostream> // std::cout, std::endl
 #include <thread>   // std::this_thread::sleep_for
 #include <chrono>   // std::chrono::seconds
+#include <fstream>
 #include "ui.hpp"
 #include "game.hpp"
 #include "utils.hpp"
@@ -10,12 +11,15 @@
 #include <GL/freeglut.h>
 #include <mutex>
 #include <thread>
-
-std::map<int, game::RES::Layer> game::layers;
-game::EVENT::EventQueue game::eventQueue;
-game::RES::TextureManager game::textureManager;
-std::mutex game::layersMutex;
-game::RES::TextureManager game::fontTextureManager;
+namespace game
+{
+    std::map<int, game::RES::Layer> layers;
+    game::EVENT::EventQueue eventQueue;
+    game::RES::TextureManager textureManager;
+    std::mutex layersMutex;
+    game::RES::TextureManager fontTextureManager;
+    std::ofstream logFile;
+}
 
 game::Controller::Controller()
 {

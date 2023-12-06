@@ -1,6 +1,7 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 #include <chrono>
+#include <string>
 namespace game::UTILS
 {
     class Timer
@@ -21,5 +22,9 @@ namespace game::UTILS
 
     uint64_t getTimestamp();
     uint64_t highResTimestamp();
+
+    bool findInEnvp(char **envp, std::string varToFind);
+
+    void redirectCout(std::string filename);
 }
 #endif
