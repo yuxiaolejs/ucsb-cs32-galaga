@@ -29,7 +29,7 @@ namespace game
     public:
         TestController() : Controller(){};
         uint32_t getScore();
-       
+
     private:
         void tick();
         void init();
@@ -57,7 +57,7 @@ namespace game
         Vec2 shipVelocity;
 
         uint32_t score = 0;
-        uint8_t hp = 10;
+        uint8_t hp = 1;
 
         // Components:
         game::RES::Text scoreText;
@@ -77,6 +77,17 @@ namespace game
         bool outOfBound(game::RES::Shape &shape);
 
         game::projectile::ProjectileManager projectileManager;
+    };
+
+    class EndScreenController : public Controller
+    {
+    public:
+        EndScreenController() : Controller(){};
+
+    private:
+        void tick();
+        void init();
+        void exit();
     };
 }
 #endif

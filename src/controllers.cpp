@@ -289,3 +289,22 @@ uint32_t game::TestController::getScore()
 {
     return this->score;
 }
+
+void game::EndScreenController::tick()
+{
+    if (!game::eventQueue.empty())
+    {
+        // One time key down detection
+        game::EVENT::Event event = game::eventQueue.pop();
+        if (event.type == game::EVENT::Event::EventType::KEYBOARD_EVENT && event.data[0] == 'q')
+            quit = true;
+    }
+}
+
+void game::EndScreenController::init()
+{
+}
+
+void game::EndScreenController::exit()
+{
+}

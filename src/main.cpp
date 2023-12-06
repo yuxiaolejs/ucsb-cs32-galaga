@@ -29,6 +29,7 @@ int main(int argc, char **argv)
 
     game::StartScreenController controller;
     game::TestController controller2;
+    game::EndScreenController controller3;
 
     controller.start()->then([&]()
                              {
@@ -39,8 +40,13 @@ int main(int argc, char **argv)
     controller2.then([&]()
                      {
         std::cout << "Controller2 CALLLLLED" << std::endl;
-            glutLeaveMainLoop();
-            std::cout << controller2.getScore() << std::endl; });
+            std::cout << controller2.getScore() << std::endl;
+            controller3.start(); });
+
+    controller3.then([&]()
+                     {
+        std::cout << "Controller3 CALLLLLED" << std::endl;
+            glutLeaveMainLoop(); });
 
     game::UI::start();
 
