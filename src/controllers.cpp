@@ -326,7 +326,7 @@ void game::EndScreenController::renderLeaderboard()
     text.setPos(-9.4, -4.4);
     text.setText("Leaderboard:");
     text.draw(&game::layers[302], false);
-    const int maxNameLength = 10;
+    const int maxNameLength = 15;
     for (Json::Value::ArrayIndex i = 0; i < this->leaderboard.size(); i++)
     {
         std::string name = this->leaderboard[i].get("name", "N/A").asString();
