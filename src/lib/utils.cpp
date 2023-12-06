@@ -63,6 +63,9 @@ void game::UTILS::redirectCout(std::string filename)
               << " - Tianle Y." << std::endl
               << "\033[0;34m--------------------------------------------" << std::endl
               << "\033[1;32m"
+              << "   Project Documentation:\033[1;0m" << std::endl
+              << "      https://yuxiaolejs.github.io/ucsb-cs32-galaga" << std::endl
+              << "\033[1;32m"
               << "   Active API gateway:\033[1;0m" << std::endl
               << "      " << game::API_PREFIX << std::endl
               << "\033[1;32m"
