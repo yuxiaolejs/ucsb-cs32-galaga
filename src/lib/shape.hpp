@@ -16,7 +16,7 @@ namespace game::RES
         float x;
         float y;
 
-        float rotation;
+        int rotation;
         float opacity;
 
         GLenum mode;
