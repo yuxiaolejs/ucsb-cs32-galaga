@@ -2,6 +2,9 @@
 #define REQ_H
 #include <string>
 #include <json/json.h>
-Json::Value request(std::string url, std::string token);
-bool download(Json::Value item, std::string token);
+namespace game::HTTP
+{
+    Json::Value get(std::string url);
+    Json::Value post(std::string url, Json::Value data);
+}
 #endif
