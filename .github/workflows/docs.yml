@@ -4,9 +4,9 @@ name: Deploy docs to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["master"]
+    branches: ["g-action"]
   pull_request:
-    branches: ["master"]
+    branches: ["g-action"]
     # types:
       # - closed
 
