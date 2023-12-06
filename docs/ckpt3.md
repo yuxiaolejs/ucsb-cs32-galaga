@@ -1,6 +1,9 @@
 # Minimum Viable Product!
 
-Made OpenGL work for us!
+This game is fun to play!
+
+## Leader board!
+[Check out our leader board here](https://yuxiaolejs.github.io/ucsb-cs32-galaga/leaderboard.html)
 
 ## Branch information
 Related branches
