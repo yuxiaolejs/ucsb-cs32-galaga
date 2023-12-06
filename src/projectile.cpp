@@ -171,7 +171,7 @@ void ProjectileManager::spawnSmartProjectile(Vec2 position, bool isAlly, u_int32
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     projectiles.push_back(new SmartProjectile(position, isAlly, target, _targetLayer));
     Shape shape;
-    shape.texture = game::textureManager.getTexture("missile_1");
+    shape.texture = game::textureManager.getTexture("missile_2");
     shape.x = position.x;
     shape.y = position.y;
     shape.width = 0.5;
