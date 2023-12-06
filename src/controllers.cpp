@@ -114,6 +114,7 @@ void game::TestController::tick()
         shipVelocity.x += 0.1;
     }
     game::layers[1].shapes[0].rotation = shipVelocity.getAngleDeg() - 90;
+    // shipVelocity = shipVelocity - Vec2(0.02, 0);
     // Move all enermy ships
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
@@ -161,6 +162,7 @@ void game::TestController::collisionDetection()
     {
         // quit = true;
         hp--;
+        this->hpVerification();
         return;
     }
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
@@ -170,7 +172,8 @@ void game::TestController::collisionDetection()
         {
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
-            hp--;
+            hp -= 3;
+            this->hpVerification();
             // quit = true;
             delete layersLock;
         }
@@ -182,15 +185,15 @@ void game::TestController::collisionDetection()
             shipVec.erase(shipVec.begin() + i);
             this->score += 1000;
             hp++;
+            this->hpVerification();
             delete layersLock;
         }
     }
-    this->hpVerification();
 }
 
 void game::TestController::hpVerification()
 {
-    if (hp == 0)
+    if (hp <= 0)
         quit = true;
 }
 
@@ -208,7 +211,7 @@ void game::TestController::generateEnermyShips()
     for (size_t i = 0; i < shipsToGen; i++)
     {
         shape = game::RES::Shape();
-        shape.texture = game::textureManager.getTexture("ship1"); // Enermy ship
+        shape.texture = game::textureManager.getTexture("ship_enemy_2"); // Enermy ship
         shape.x = 10;
         shape.y = (float)(rand() % 13) - ((float)ENERMY_SHIPS_IN_A_GEN / 2.0);
         shape.width = 1;
@@ -223,15 +226,17 @@ void game::TestController::generateProjectiles()
 {
     auto &shipVec = game::layers[1].shapes;
     if (frameCount % FRAMES_PER_ALLY_PROJECTILE_GEN == 0) // Generate ally projectiles
-        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity / shipVelocity.magnitude() * 0.10);
+        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity / shipVelocity.magnitude() * 0.2);
 
     if (frameCount % FRAMES_PER_ENERMY_PROJECTILE_GEN == 0) // Generate enermy projectiles
         for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
             this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[i].x, shipVec[i].y), false);
 
-    if (frameCount % 100 == 0) // Generate enermy projectiles
-        for (size_t i = 1; i < 2; i++)
-            this->projectileManager.spawnSmartProjectile(game::vec::Vec2(shipVec[i].x, shipVec[i].y), false, shipVec[0].id, &game::layers[1]);
+    if (frameCount % 100 == 0 && game::layers[1].shapes.size() > 1) // Generate enermy projectiles
+    {
+        size_t i = rand() % (game::layers[1].shapes.size() - 1) + 1;
+        this->projectileManager.spawnSmartProjectile(game::vec::Vec2(shipVec[i].x, shipVec[i].y), false, shipVec[0].id, &game::layers[1]);
+    }
 }
 
 void game::TestController::init()
@@ -251,7 +256,7 @@ void game::TestController::init()
     game::layers.insert({1, game::RES::Layer()}); // Layer of ships
 
     game::RES::Shape shape;
-    shape.texture = game::textureManager.getTexture("ship1"); // Our ship
+    shape.texture = game::textureManager.getTexture("ship_friendly_1"); // Our ship
     shape.x = 0;
     shape.y = 0;
     shape.width = 1;
@@ -301,45 +306,21 @@ void game::EndScreenController::tick()
         if (event.type == game::EVENT::Event::EventType::KEYBOARD_EVENT && event.data[0] == 'q')
             quit = true;
     }
+
+    if (dir)
+        counter++;
+    else
+        counter--;
+    if (counter >= 100)
+        dir = false;
+    else if (counter <= 20)
+        dir = true;
+    game::layers[0].shapes[2].opacity = (float)counter / 100.0;
 }
 
 void game::EndScreenController::init()
 {
-    game::layers.insert({301, game::RES::Layer()}); // Layer of score
-    game::layers.insert({302, game::RES::Layer()}); // Layer of score
-    game::RES::Text scoreText;
-    scoreText.setRatio(2.3);
-    scoreText.setSize(1);
-    scoreText.setPos(-5, 0);
-    scoreText.setText(std::to_string(score));
-    scoreText.draw(&game::layers[301]);
-    this->submitScore();
-    this->leaderboard = game::HTTP::get("https://cs32.tianleyu.com/galaga/score");
-    this->renderLeaderboard();
-}
-
-void game::EndScreenController::renderLeaderboard()
-{
-    game::RES::Text text;
-    text.setRatio(2.3);
-    text.setSize(0.2);
-    text.setPos(-9.4, -4.4);
-    text.setText("Leaderboard:");
-    text.draw(&game::layers[302], false);
-    const int maxNameLength = 15;
-    for (Json::Value::ArrayIndex i = 0; i < this->leaderboard.size(); i++)
-    {
-        std::string name = this->leaderboard[i].get("name", "N/A").asString();
-        std::string score = std::to_string(this->leaderboard[i].get("score", 0).asUInt());
-        if (name.length() > maxNameLength)
-            name = name.substr(0, maxNameLength);
-        text.setPos(-9.4, -4 + (i + 1) * 0.4);
-        text.setText(name + std::string(maxNameLength - name.length() + 1, '.') + " " + score);
-        text.draw(&game::layers[302], false);
-        if (i > 18)
-            break;
-    }
-
+    game::layers.insert({0, game::RES::Layer()}); // Layer of score
     game::RES::Shape shape;
     shape.texture = game::textureManager.getTexture("Gameover!");
     shape.x = 0;
@@ -351,12 +332,73 @@ void game::EndScreenController::renderLeaderboard()
 
     shape = game::RES::Shape();
     shape.texture = game::textureManager.getTexture("LB_TEXT");
-    shape.x = 6.8;
+    shape.x = -6.8;
     shape.y = 5;
     shape.width = 6;
     shape.height = 1;
 
     game::layers[0].shapes.push_back(shape);
+
+    shape = game::RES::Shape();
+    shape.texture = game::textureManager.getTexture("PRESS_Q");
+    shape.x = 0;
+    shape.y = 3.8;
+    shape.width = 6;
+    shape.height = 1;
+
+    game::layers[0].shapes.push_back(shape);
+
+    game::layers.insert({301, game::RES::Layer()}); // Layer of score
+    game::layers.insert({302, game::RES::Layer()}); // Layer of leaderboard
+
+    game::RES::Text scoreText; // Render score
+    scoreText.setRatio(2.3);
+    scoreText.setSize(0.2);
+    scoreText.setPos(4.8, -1);
+    scoreText.setText("Your score:");
+    scoreText.draw(&game::layers[301]);
+    scoreText.setPos(5, 0);
+    scoreText.setSize(0.6);
+    scoreText.setText(std::to_string(score));
+    scoreText.draw(&game::layers[301], false);
+
+    game::RES::Text text;
+    text.setRatio(2.3);
+    text.setSize(0.2);
+    text.setPos(-9.4, -4 - 0.2 * 2);
+    text.setText("Leaderboard Loading...");
+    text.draw(&game::layers[302], false);
+
+    this->submitScore();
+    this->leaderboard = game::HTTP::get("https://cs32.tianleyu.com/galaga/score");
+    this->renderLeaderboard();
+}
+
+void game::EndScreenController::renderLeaderboard()
+{
+    const float leaderBoardFontSize = 0.15;
+    const int maxNameLength = 12;
+    const int maxScoreLength = 8;
+    game::RES::Text text;
+    text.setRatio(2.3);
+    text.setSize(leaderBoardFontSize);
+    text.setPos(-9.4, -4 - leaderBoardFontSize * 2);
+    text.setText("Leaderboard:");
+    text.draw(&game::layers[302], true);
+    for (Json::Value::ArrayIndex i = 0; i < this->leaderboard.size(); i++)
+    {
+        std::string name = this->leaderboard[i].get("name", "N/A").asString();
+        std::string time = this->leaderboard[i].get("time", "N/A").asString();
+        std::string score = std::to_string(this->leaderboard[i].get("score", 0).asUInt());
+        if (name.length() > maxNameLength)
+            name = name.substr(0, maxNameLength);
+        text.setPos(-9.4, -4 + (i + 1) * leaderBoardFontSize * 2);
+        text.setText(name + " " + std::string(maxNameLength - name.length() + 1, '.') + " " +
+                     score + std::string(maxScoreLength - score.length() + 1, ' ') + time);
+        text.draw(&game::layers[302], false);
+        if (i > 23)
+            break;
+    }
 }
 
 void game::EndScreenController::exit()

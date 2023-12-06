@@ -17,7 +17,7 @@ using namespace game::projectile;
 
 bool Projectile::outOfBound()
 {
-    return position.x > 10 || position.x < -10 || position.y > 5 || position.y < -5;
+    return position.x > 10 || position.x < -10 || position.y > 6 || position.y < -6;
 }
 
 StupidProjectile::StupidProjectile() : Projectile(){};
@@ -53,6 +53,7 @@ SmartProjectile::SmartProjectile(Vec2 position, bool isAlly, u_int32_t target, L
     this->isAlly = isAlly;
     this->targetLayer = targetLayer;
     this->target = target;
+    this->ttl = 400;    // plus explosion duration
 }
 
 void SmartProjectile::tick()
@@ -78,12 +79,24 @@ void SmartProjectile::tick()
         velocity = Vec2(0, 0.1);
         return;
     }
+
+    const float KP = 0.005;
+    const float KI = 0.0015;
+    const float KD = 0.002;
+    const float INTEGRAL_LIMIT = 50.0;
+
     Vec2 targetPosition = Vec2(_target->x, _target->y);
     // Use PID algorithm to calculate velocity
     Vec2 P = targetPosition - position;
     Vec2 D = P - prevDiff;
     Vec2 I = intgDiff + P / 10.00;
-    velocity = P * 0.004 + D * 0.0015 + I * 0.0015;
+
+    // Limit integral
+    if (I.magnitude() > INTEGRAL_LIMIT) {
+        I = I / I.magnitude() * INTEGRAL_LIMIT;
+    }
+
+    velocity = P * KP + I * KI + D * KD;
     prevDiff = P;
     intgDiff = I;
 }
@@ -101,6 +114,8 @@ ProjectileManager::~ProjectileManager()
 void ProjectileManager::tick()
 {
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
+    const int explosionDuration = 40;
+
     for (size_t i = 0; i < projectiles.size(); i++)
     {
         projectiles[i]->tick();
@@ -108,6 +123,12 @@ void ProjectileManager::tick()
         {
             deleteProjectile(i);
             i--;
+        }
+        else if (projectiles[i]->ttl <= explosionDuration)
+        {
+            if (projectiles[i]->ttl < explosionDuration)
+                continue;
+            updateProjectileTexture(i, "explode", 0.4, 0.4, 45);
         }
         else
         {
@@ -135,16 +156,26 @@ void ProjectileManager::updateProjectile(size_t idx)
     targetLayer->shapes[idx].rotation = projectiles[idx]->velocity.getAngleDeg() - 90;
 }
 
+void ProjectileManager::updateProjectileTexture(size_t idx, std::string textureName, float width, float height, int rotation)
+{
+    if (!targetLayer || idx >= projectiles.size() || idx >= targetLayer->shapes.size())
+        return;
+    targetLayer->shapes[idx].texture = game::textureManager.getTexture(textureName);
+    targetLayer->shapes[idx].width = width;
+    targetLayer->shapes[idx].height = height;
+    targetLayer->shapes[idx].rotation = rotation;
+}
+
 void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly)
 {
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     projectiles.push_back(new StupidProjectile(position, isAlly));
     Shape shape;
-    shape.texture = game::textureManager.getTexture("proj1");
+    shape.texture = game::textureManager.getTexture("bullet_2");
     shape.x = position.x;
     shape.y = position.y;
     shape.width = 0.15;
-    shape.height = 0.15;
+    shape.height = 0.29;
     shape.rotation = 0;
     targetLayer->shapes.push_back(shape);
     delete layersLock;
@@ -155,11 +186,11 @@ void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly, Vec2 v
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     projectiles.push_back(new StupidProjectile(position, isAlly, velocity));
     Shape shape;
-    shape.texture = game::textureManager.getTexture("proj2");
+    shape.texture = game::textureManager.getTexture("bullet_1");
     shape.x = position.x;
     shape.y = position.y;
-    shape.width = 0.15;
-    shape.height = 0.29;
+    shape.width = 0.2;
+    shape.height = 0.2;
     shape.rotation = 0;
     targetLayer->shapes.push_back(shape);
     delete layersLock;
@@ -170,11 +201,11 @@ void ProjectileManager::spawnSmartProjectile(Vec2 position, bool isAlly, u_int32
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     projectiles.push_back(new SmartProjectile(position, isAlly, target, _targetLayer));
     Shape shape;
-    shape.texture = game::textureManager.getTexture("proj3");
+    shape.texture = game::textureManager.getTexture("missile_2");
     shape.x = position.x;
     shape.y = position.y;
-    shape.width = 0.8;
-    shape.height = 1.2;
+    shape.width = 0.4;
+    shape.height = 0.65;
     shape.rotation = 0;
     targetLayer->shapes.push_back(shape);
     delete layersLock;
