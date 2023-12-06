@@ -14,7 +14,9 @@
 
 int main(int argc, char **argv, char **envp)
 {
-    game::UTILS::redirectCout("galaga.log");
+    bool isDev = game::UTILS::findInEnvp(envp, "GALAGA") && std::string(getenv("GALAGA")) == "dev";
+    if (!isDev)
+        game::UTILS::redirectCout("galaga.log");
 
     game::UI::UIConf ui_config;
     ui_config.windowTitle = "Test Game";
@@ -47,10 +49,9 @@ int main(int argc, char **argv, char **envp)
 
     controller3.then([&]()
                      {
-        std::cout << "Controller3 CALLLLLED" << std::endl;
             glutLeaveMainLoop(); });
 
-    if (game::UTILS::findInEnvp(envp, "GALAGA") && std::string(getenv("GALAGA")) == "dev")
+    if (isDev)
         game::PERF::performanceManager.start();
     else
         glutFullScreen();
