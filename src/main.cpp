@@ -25,8 +25,6 @@ int main(int argc, char **argv, char **envp)
     game::fontTextureManager.changePath("res/font1/");
     game::fontTextureManager.loadAllTextures(true, 255, 255, 255);
 
-    // game::PERF::performanceManager.start(); // Comment this line to disable performance manager
-
     game::StartScreenController controller;
     game::TestController controller2;
     game::EndScreenController controller3;
@@ -49,8 +47,11 @@ int main(int argc, char **argv, char **envp)
         std::cout << "Controller3 CALLLLLED" << std::endl;
             glutLeaveMainLoop(); });
 
-    if (std::string(getenv("GALAGA")) != "dev")
+    if (std::string(getenv("GALAGA")) == "dev")
+        game::PERF::performanceManager.start();
+    else
         glutFullScreen();
+        
     game::UI::start();
 
     return 0;
