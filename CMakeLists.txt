@@ -35,4 +35,4 @@ target_link_libraries(ezg jsoncpp)
 # target_link_libraries(test )
 # target_link_libraries(CanvasDownloader ${CURL_LIBRARIES})
 
-target_include_directories(ezg PRIVATE /usr/include/jsoncpp)
+# target_include_directories(ezg PRIVATE /usr/include/jsoncpp)
