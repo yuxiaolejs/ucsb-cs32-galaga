@@ -226,7 +226,7 @@ void game::TestController::generateProjectiles()
 {
     auto &shipVec = game::layers[1].shapes;
     if (frameCount % FRAMES_PER_ALLY_PROJECTILE_GEN == 0) // Generate ally projectiles
-        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity - Vec2(0.02, 0) + shipVelocity / shipVelocity.magnitude() * 0.05);
+        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity / shipVelocity.magnitude() * 0.2);
 
     if (frameCount % FRAMES_PER_ENERMY_PROJECTILE_GEN == 0) // Generate enermy projectiles
         for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
