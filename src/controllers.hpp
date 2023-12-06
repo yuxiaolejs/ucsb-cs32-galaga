@@ -58,7 +58,7 @@ namespace game
         Vec2 shipVelocity;
 
         uint32_t score = 0;
-        uint8_t hp = 1;
+        int hp = 10;
 
         // Components:
         game::RES::Text scoreText;

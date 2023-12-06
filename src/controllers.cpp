@@ -114,6 +114,7 @@ void game::TestController::tick()
         shipVelocity.x += 0.1;
     }
     game::layers[1].shapes[0].rotation = shipVelocity.getAngleDeg() - 90;
+    // shipVelocity = shipVelocity - Vec2(0.02, 0);
     // Move all enermy ships
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
@@ -161,6 +162,7 @@ void game::TestController::collisionDetection()
     {
         // quit = true;
         hp--;
+        this->hpVerification();
         return;
     }
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
@@ -170,7 +172,8 @@ void game::TestController::collisionDetection()
         {
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
-            hp--;
+            hp -= 3;
+            this->hpVerification();
             // quit = true;
             delete layersLock;
         }
@@ -182,15 +185,15 @@ void game::TestController::collisionDetection()
             shipVec.erase(shipVec.begin() + i);
             this->score += 1000;
             hp++;
+            this->hpVerification();
             delete layersLock;
         }
     }
-    this->hpVerification();
 }
 
 void game::TestController::hpVerification()
 {
-    if (hp == 0)
+    if (hp <= 0)
         quit = true;
 }
 
@@ -223,15 +226,17 @@ void game::TestController::generateProjectiles()
 {
     auto &shipVec = game::layers[1].shapes;
     if (frameCount % FRAMES_PER_ALLY_PROJECTILE_GEN == 0) // Generate ally projectiles
-        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity / shipVelocity.magnitude() * 0.10);
+        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity - Vec2(0.02, 0) + shipVelocity / shipVelocity.magnitude() * 0.05);
 
     if (frameCount % FRAMES_PER_ENERMY_PROJECTILE_GEN == 0) // Generate enermy projectiles
         for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
             this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[i].x, shipVec[i].y), false);
 
-    if (frameCount % 100 == 0) // Generate enermy projectiles
-        for (size_t i = 1; i < 2; i++)
-            this->projectileManager.spawnSmartProjectile(game::vec::Vec2(shipVec[i].x, shipVec[i].y), false, shipVec[0].id, &game::layers[1]);
+    if (frameCount % 100 == 0 && game::layers[1].shapes.size() > 1) // Generate enermy projectiles
+    {
+        size_t i = rand() % (game::layers[1].shapes.size() - 1) + 1;
+        this->projectileManager.spawnSmartProjectile(game::vec::Vec2(shipVec[i].x, shipVec[i].y), false, shipVec[0].id, &game::layers[1]);
+    }
 }
 
 void game::TestController::init()
@@ -372,8 +377,8 @@ void game::EndScreenController::init()
 void game::EndScreenController::renderLeaderboard()
 {
     const float leaderBoardFontSize = 0.15;
-    const int maxNameLength = 15;
-    const int maxScoreLength = 6;
+    const int maxNameLength = 12;
+    const int maxScoreLength = 8;
     game::RES::Text text;
     text.setRatio(2.3);
     text.setSize(leaderBoardFontSize);
@@ -391,7 +396,7 @@ void game::EndScreenController::renderLeaderboard()
         text.setText(name + " " + std::string(maxNameLength - name.length() + 1, '.') + " " +
                      score + std::string(maxScoreLength - score.length() + 1, ' ') + time);
         text.draw(&game::layers[302], false);
-        if (i > 18)
+        if (i > 23)
             break;
     }
 }
