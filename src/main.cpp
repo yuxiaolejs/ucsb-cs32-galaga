@@ -5,6 +5,7 @@
 #include "lib/game.hpp"
 #include "lib/layer.hpp"
 #include "lib/performance.hpp"
+#include "lib/utils.hpp"
 #include "controllers.hpp"
 #include <iostream>
 #include <thread>
@@ -47,7 +48,7 @@ int main(int argc, char **argv, char **envp)
         std::cout << "Controller3 CALLLLLED" << std::endl;
             glutLeaveMainLoop(); });
 
-    if (getenv("GALAGA") && std::string(getenv("GALAGA")) == "dev")
+    if (game::UTILS::findInEnvp(envp, "GALAGA") && std::string(getenv("GALAGA")) == "dev")
         game::PERF::performanceManager.start();
     else
         glutFullScreen();
