@@ -208,7 +208,7 @@ void game::TestController::generateEnermyShips()
     for (size_t i = 0; i < shipsToGen; i++)
     {
         shape = game::RES::Shape();
-        shape.texture = game::textureManager.getTexture("ship1"); // Enermy ship
+        shape.texture = game::textureManager.getTexture("ship_2"); // Enermy ship
         shape.x = 10;
         shape.y = (float)(rand() % 13) - ((float)ENERMY_SHIPS_IN_A_GEN / 2.0);
         shape.width = 1;
