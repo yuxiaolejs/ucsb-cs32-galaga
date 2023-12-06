@@ -17,7 +17,7 @@ using namespace game::projectile;
 
 bool Projectile::outOfBound()
 {
-    return position.x > 10 || position.x < -10 || position.y > 5 || position.y < -5;
+    return position.x > 10 || position.x < -10 || position.y > 6 || position.y < -6;
 }
 
 StupidProjectile::StupidProjectile() : Projectile(){};
@@ -53,6 +53,7 @@ SmartProjectile::SmartProjectile(Vec2 position, bool isAlly, u_int32_t target, L
     this->isAlly = isAlly;
     this->targetLayer = targetLayer;
     this->target = target;
+    this->ttl = 300;
 }
 
 void SmartProjectile::tick()
@@ -140,11 +141,11 @@ void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly)
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     projectiles.push_back(new StupidProjectile(position, isAlly));
     Shape shape;
-    shape.texture = game::textureManager.getTexture("proj1");
+    shape.texture = game::textureManager.getTexture("bullet_2");
     shape.x = position.x;
     shape.y = position.y;
     shape.width = 0.15;
-    shape.height = 0.15;
+    shape.height = 0.29;
     shape.rotation = 0;
     targetLayer->shapes.push_back(shape);
     delete layersLock;
@@ -155,11 +156,11 @@ void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly, Vec2 v
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     projectiles.push_back(new StupidProjectile(position, isAlly, velocity));
     Shape shape;
-    shape.texture = game::textureManager.getTexture("proj2");
+    shape.texture = game::textureManager.getTexture("bullet_1");
     shape.x = position.x;
     shape.y = position.y;
-    shape.width = 0.15;
-    shape.height = 0.29;
+    shape.width = 0.2;
+    shape.height = 0.2;
     shape.rotation = 0;
     targetLayer->shapes.push_back(shape);
     delete layersLock;
@@ -170,11 +171,11 @@ void ProjectileManager::spawnSmartProjectile(Vec2 position, bool isAlly, u_int32
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     projectiles.push_back(new SmartProjectile(position, isAlly, target, _targetLayer));
     Shape shape;
-    shape.texture = game::textureManager.getTexture("proj3");
+    shape.texture = game::textureManager.getTexture("missile_2");
     shape.x = position.x;
     shape.y = position.y;
-    shape.width = 0.8;
-    shape.height = 1.2;
+    shape.width = 0.5;
+    shape.height = 0.8;
     shape.rotation = 0;
     targetLayer->shapes.push_back(shape);
     delete layersLock;
