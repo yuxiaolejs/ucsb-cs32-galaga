@@ -70,6 +70,14 @@ void game::StartScreenController::init()
 
     game::layers[0].shapes.push_back(shape);
 
+    game::layers.insert({301, game::RES::Layer()}); // Layer of text
+    game::RES::Text text;
+    text.setRatio(2.3);
+    text.setSize(0.15);
+    text.setPos(4.3, 5.4);
+    text.setText(game::VERSION_NUMBER);
+    text.draw(&game::layers[301], false);
+
     srand(game::UTILS::getTimestamp() % 10000);
 }
 
@@ -211,7 +219,7 @@ void game::TestController::generateEnermyShips()
     for (size_t i = 0; i < shipsToGen; i++)
     {
         shape = game::RES::Shape();
-        shape.texture = game::textureManager.getTexture("ship_2"); // Enermy ship
+        shape.texture = game::textureManager.getTexture("ship_enemy_2"); // Enermy ship
         shape.x = 10;
         shape.y = (float)(rand() % 13) - ((float)ENERMY_SHIPS_IN_A_GEN / 2.0);
         shape.width = 1;
@@ -226,7 +234,7 @@ void game::TestController::generateProjectiles()
 {
     auto &shipVec = game::layers[1].shapes;
     if (frameCount % FRAMES_PER_ALLY_PROJECTILE_GEN == 0) // Generate ally projectiles
-        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity - Vec2(0.02, 0) + shipVelocity / shipVelocity.magnitude() * 0.05);
+        this->projectileManager.spawnStupidProjectile(game::vec::Vec2(shipVec[0].x, shipVec[0].y), true, shipVelocity / shipVelocity.magnitude() * 0.2);
 
     if (frameCount % FRAMES_PER_ENERMY_PROJECTILE_GEN == 0) // Generate enermy projectiles
         for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
@@ -256,7 +264,7 @@ void game::TestController::init()
     game::layers.insert({1, game::RES::Layer()}); // Layer of ships
 
     game::RES::Shape shape;
-    shape.texture = game::textureManager.getTexture("ship1"); // Our ship
+    shape.texture = game::textureManager.getTexture("ship_friendly_1"); // Our ship
     shape.x = 0;
     shape.y = 0;
     shape.width = 1;
@@ -348,6 +356,15 @@ void game::EndScreenController::init()
 
     game::layers[0].shapes.push_back(shape);
 
+    game::layers.insert({303, game::RES::Layer()}); // Layer of text
+
+    game::RES::Text text;
+    text.setRatio(2.3);
+    text.setSize(0.15);
+    text.setPos(4.3, 5.4);
+    text.setText(game::VERSION_NUMBER);
+    text.draw(&game::layers[303], false);
+
     game::layers.insert({301, game::RES::Layer()}); // Layer of score
     game::layers.insert({302, game::RES::Layer()}); // Layer of leaderboard
 
@@ -362,15 +379,15 @@ void game::EndScreenController::init()
     scoreText.setText(std::to_string(score));
     scoreText.draw(&game::layers[301], false);
 
-    game::RES::Text text;
-    text.setRatio(2.3);
-    text.setSize(0.2);
-    text.setPos(-9.4, -4 - 0.2 * 2);
-    text.setText("Leaderboard Loading...");
-    text.draw(&game::layers[302], false);
+    game::RES::Text text2;
+    text2.setRatio(2.3);
+    text2.setSize(0.2);
+    text2.setPos(-9.4, -4 - 0.2 * 2);
+    text2.setText("Leaderboard Loading...");
+    text2.draw(&game::layers[302], false);
 
     this->submitScore();
-    this->leaderboard = game::HTTP::get("https://cs32.tianleyu.com/galaga/score");
+    this->leaderboard = game::HTTP::get(game::API_PREFIX + "/score");
     this->renderLeaderboard();
 }
 
@@ -415,7 +432,7 @@ void game::EndScreenController::submitScore()
     Json::Value data;
     data["score"] = this->score;
     data["name"] = this->userName;
-    game::HTTP::post("https://cs32.tianleyu.com/galaga/score", data);
+    game::HTTP::post(game::API_PREFIX + "/score", data);
 }
 
 void game::EndScreenController::setUserName(std::string userName)

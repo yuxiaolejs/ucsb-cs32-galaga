@@ -58,6 +58,7 @@ namespace game::projectile
         void tick();
         void deleteProjectile(size_t idx);
         void updateProjectile(size_t idx);
+        void updateProjectileTexture(size_t idx, std::string textureName, float width, float height, int rotation);
 
         void spawnStupidProjectile(Vec2 position, bool isAlly);
         void spawnStupidProjectile(Vec2 position, bool isAlly, Vec2 velocity);

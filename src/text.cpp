@@ -56,6 +56,10 @@ void Text::draw(Layer *layer, bool clear)
         std::string fileName = std::string(1, c);
         if (c == ':')
             fileName = "col";
+        else if (c == '/')
+            fileName = "fs";
+        else if (c == '\\')
+            fileName = "bs";
         if (!isalpha(c) || !islower(c))
         {
             fileName = "u" + fileName;

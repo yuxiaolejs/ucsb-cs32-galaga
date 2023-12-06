@@ -5,6 +5,7 @@
 #include "lib/game.hpp"
 #include "lib/layer.hpp"
 #include "lib/performance.hpp"
+#include "lib/utils.hpp"
 #include "controllers.hpp"
 #include <iostream>
 #include <thread>
@@ -13,6 +14,10 @@
 
 int main(int argc, char **argv, char **envp)
 {
+    bool isDev = game::UTILS::findInEnvp(envp, "GALAGA") && std::string(getenv("GALAGA")) == "dev";
+    if (!isDev)
+        game::UTILS::redirectCout("galaga.log");
+
     game::UI::UIConf ui_config;
     ui_config.windowTitle = "Test Game";
     ui_config.windowWidth = 1920;
@@ -24,8 +29,6 @@ int main(int argc, char **argv, char **envp)
 
     game::fontTextureManager.changePath("res/font1/");
     game::fontTextureManager.loadAllTextures(true, 255, 255, 255);
-
-    // game::PERF::performanceManager.start(); // Comment this line to disable performance manager
 
     game::StartScreenController controller;
     game::TestController controller2;
@@ -46,11 +49,13 @@ int main(int argc, char **argv, char **envp)
 
     controller3.then([&]()
                      {
-        std::cout << "Controller3 CALLLLLED" << std::endl;
             glutLeaveMainLoop(); });
 
-    if (std::string(getenv("GALAGA")) != "dev")
+    if (isDev)
+        game::PERF::performanceManager.start();
+    else
         glutFullScreen();
+
     game::UI::start();
 
     return 0;
