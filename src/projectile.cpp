@@ -143,8 +143,8 @@ void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly)
     shape.texture = game::textureManager.getTexture("proj1");
     shape.x = position.x;
     shape.y = position.y;
-    shape.width = 0.5;
-    shape.height = 0.5;
+    shape.width = 0.15;
+    shape.height = 0.29;
     shape.rotation = 0;
     targetLayer->shapes.push_back(shape);
     delete layersLock;
@@ -158,8 +158,8 @@ void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly, Vec2 v
     shape.texture = game::textureManager.getTexture("proj1");
     shape.x = position.x;
     shape.y = position.y;
-    shape.width = 0.5;
-    shape.height = 0.5;
+    shape.width = 0.15;
+    shape.height = 0.29;
     shape.rotation = 0;
     targetLayer->shapes.push_back(shape);
     delete layersLock;
