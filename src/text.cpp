@@ -37,11 +37,12 @@ void Text::setRatio(float ratio)
     this->ratio = ratio;
 }
 
-void Text::draw(Layer *layer)
+void Text::draw(Layer *layer, bool clear)
 {
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     std::vector<Shape> &shapes = layer->shapes;
-    shapes.clear();
+    if (clear)
+        shapes.clear();
     float x = this->x;
     float y = this->y;
     float size = this->size;

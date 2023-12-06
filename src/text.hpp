@@ -13,7 +13,7 @@ namespace game::RES
         void setText(std::string text);
         void setPos(float x, float y);
         void setSize(float size);
-        void draw(Layer *layer);
+        void draw(Layer *layer, bool clear = true);
         void setRatio(float ratio);
 
     private:

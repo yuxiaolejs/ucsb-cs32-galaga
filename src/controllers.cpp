@@ -7,11 +7,13 @@
 #include "lib/utils.hpp"
 #include "controllers.hpp"
 #include "text.hpp"
+#include "3rdparty/request.hpp"
 
 #include <GL/freeglut.h>
 #include <mutex>
 #include <thread>
 #include <cstdlib>
+#include <json/json.h>
 #include "vec.hpp"
 using game::vec::Vec2;
 void game::StartScreenController::tick()
@@ -304,12 +306,30 @@ void game::EndScreenController::tick()
 void game::EndScreenController::init()
 {
     game::layers.insert({301, game::RES::Layer()}); // Layer of score
+    game::layers.insert({302, game::RES::Layer()}); // Layer of score
     game::RES::Text scoreText;
     scoreText.setRatio(2.3);
     scoreText.setSize(1);
     scoreText.setPos(-5, 0);
     scoreText.setText(std::to_string(score));
     scoreText.draw(&game::layers[301]);
+    this->submitScore();
+    this->leaderboard = game::HTTP::get("https://cs32.tianleyu.com/galaga/score");
+    this->renderLeaderboard();
+}
+
+void game::EndScreenController::renderLeaderboard()
+{
+    game::RES::Text text;
+    text.setRatio(2.3);
+    text.setSize(0.3);
+    text.setPos(-5, 2);
+    for (Json::Value::ArrayIndex i = 0; i < this->leaderboard.size(); i++)
+    {
+        text.setText(this->leaderboard[i].get("name", "N/A").asString() + " " + std::to_string(this->leaderboard[i].get("score", 0).asUInt()));
+        text.draw(&game::layers[302], false);
+        text.setPos(-5, 2 - (i + 1) * 0.5);
+    }
 }
 
 void game::EndScreenController::exit()
@@ -319,4 +339,17 @@ void game::EndScreenController::exit()
 void game::EndScreenController::setScore(uint32_t score)
 {
     this->score = score;
+}
+
+void game::EndScreenController::submitScore()
+{
+    Json::Value data;
+    data["score"] = this->score;
+    data["name"] = this->userName;
+    game::HTTP::post("https://cs32.tianleyu.com/galaga/score", data);
+}
+
+void game::EndScreenController::setUserName(std::string userName)
+{
+    this->userName = userName;
 }

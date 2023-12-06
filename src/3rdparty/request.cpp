@@ -31,14 +31,14 @@ Json::Value game::HTTP::get(string url)
             myRequest.setOpt(myHeaders);
             myRequest.setOpt(ws);
 
-            myRequest.perform();
+            // myRequest.perform();
 
-            int code = curlpp::infos::ResponseCode::get(myRequest);
-            if (code != 200)
-            {
-                cout << "[fatal] Request failed with a code of " << code << endl;
-                exit(2);
-            }
+            // int code = curlpp::infos::ResponseCode::get(myRequest);
+            // if (code != 200)
+            // {
+            //     cout << "[fatal] Request failed with a code of " << code << endl;
+            //     exit(2);
+            // }
 
             os << myRequest;
             Json::Value root;
@@ -64,6 +64,7 @@ Json::Value game::HTTP::get(string url)
 
 Json::Value game::HTTP::post(string url, Json::Value data)
 {
+    std::cout << "POSTING" << std::endl;
     try
     {
         curlpp::Cleanup myCleanup;
@@ -85,14 +86,14 @@ Json::Value game::HTTP::post(string url, Json::Value data)
             myRequest.setOpt(myPostFieldSize);
             myRequest.setOpt(ws);
 
-            myRequest.perform();
+            // myRequest.perform();
 
-            int code = curlpp::infos::ResponseCode::get(myRequest);
-            if (code != 200)
-            {
-                cout << "[fatal] Request failed with a code of " << code << endl;
-                exit(2);
-            }
+            // int code = curlpp::infos::ResponseCode::get(myRequest);
+            // if (code != 200)
+            // {
+            //     cout << "[fatal] Request failed with a code of " << code << endl;
+            //     exit(2);
+            // }
 
             os << myRequest;
             Json::Value root;

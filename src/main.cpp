@@ -11,7 +11,7 @@
 
 #include <GL/freeglut.h>
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
     game::UI::UIConf ui_config;
     ui_config.windowTitle = "Test Game";
@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     game::fontTextureManager.changePath("res/font1/");
     game::fontTextureManager.loadAllTextures(true, 255, 255, 255);
 
-    game::PERF::performanceManager.start(); // Comment this line to disable performance manager
+    // game::PERF::performanceManager.start(); // Comment this line to disable performance manager
 
     game::StartScreenController controller;
     game::TestController controller2;
@@ -41,6 +41,7 @@ int main(int argc, char **argv)
                      {
         std::cout << "Controller2 CALLLLLED" << std::endl;
             controller3.setScore(controller2.getScore());
+            controller3.setUserName(getenv("LOGNAME"));
             controller3.start(); });
 
     controller3.then([&]()

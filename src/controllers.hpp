@@ -5,6 +5,7 @@
 #include "projectile.hpp"
 #include "text.hpp"
 #include "vec.hpp"
+#include <json/json.h>
 using game::vec::Vec2;
 namespace game
 {
@@ -84,6 +85,8 @@ namespace game
     public:
         EndScreenController() : Controller(){};
         void setScore(uint32_t score);
+        void setUserName(std::string userName);
+        void submitScore();
 
     private:
         void tick();
@@ -92,6 +95,11 @@ namespace game
 
         // User defined
         uint32_t score = 0;
+        std::string userName = "";
+
+        Json::Value leaderboard;
+
+        void renderLeaderboard();
     };
 }
 #endif
