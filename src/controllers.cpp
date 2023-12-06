@@ -305,41 +305,7 @@ void game::EndScreenController::tick()
 
 void game::EndScreenController::init()
 {
-    game::layers.insert({301, game::RES::Layer()}); // Layer of score
-    game::layers.insert({302, game::RES::Layer()}); // Layer of score
-    game::RES::Text scoreText;
-    scoreText.setRatio(2.3);
-    scoreText.setSize(1);
-    scoreText.setPos(-5, 0);
-    scoreText.setText(std::to_string(score));
-    scoreText.draw(&game::layers[301]);
-    this->submitScore();
-    this->leaderboard = game::HTTP::get("https://cs32.tianleyu.com/galaga/score");
-    this->renderLeaderboard();
-}
-
-void game::EndScreenController::renderLeaderboard()
-{
-    game::RES::Text text;
-    text.setRatio(2.3);
-    text.setSize(0.2);
-    text.setPos(-9.4, -4.4);
-    text.setText("Leaderboard:");
-    text.draw(&game::layers[302], false);
-    const int maxNameLength = 15;
-    for (Json::Value::ArrayIndex i = 0; i < this->leaderboard.size(); i++)
-    {
-        std::string name = this->leaderboard[i].get("name", "N/A").asString();
-        std::string score = std::to_string(this->leaderboard[i].get("score", 0).asUInt());
-        if (name.length() > maxNameLength)
-            name = name.substr(0, maxNameLength);
-        text.setPos(-9.4, -4 + (i + 1) * 0.4);
-        text.setText(name + std::string(maxNameLength - name.length() + 1, '.') + " " + score);
-        text.draw(&game::layers[302], false);
-        if (i > 18)
-            break;
-    }
-
+    game::layers.insert({0, game::RES::Layer()}); // Layer of score
     game::RES::Shape shape;
     shape.texture = game::textureManager.getTexture("Gameover!");
     shape.x = 0;
@@ -351,12 +317,55 @@ void game::EndScreenController::renderLeaderboard()
 
     shape = game::RES::Shape();
     shape.texture = game::textureManager.getTexture("LB_TEXT");
-    shape.x = 6.8;
+    shape.x = -6.8;
     shape.y = 5;
     shape.width = 6;
     shape.height = 1;
 
     game::layers[0].shapes.push_back(shape);
+
+    game::layers.insert({301, game::RES::Layer()}); // Layer of score
+    game::layers.insert({302, game::RES::Layer()}); // Layer of score
+    game::RES::Text scoreText;
+    scoreText.setRatio(2.3);
+    scoreText.setSize(0.2);
+    scoreText.setPos(4.8, -1);
+    scoreText.setText("Your score:");
+    scoreText.draw(&game::layers[301]);
+    scoreText.setPos(5, 0);
+    scoreText.setSize(0.6);
+    scoreText.setText(std::to_string(score));
+    scoreText.draw(&game::layers[301], false);
+    this->submitScore();
+    this->leaderboard = game::HTTP::get("https://cs32.tianleyu.com/galaga/score");
+    this->renderLeaderboard();
+}
+
+void game::EndScreenController::renderLeaderboard()
+{
+    const float leaderBoardFontSize = 0.15;
+    const int maxNameLength = 15;
+    const int maxScoreLength = 6;
+    game::RES::Text text;
+    text.setRatio(2.3);
+    text.setSize(leaderBoardFontSize);
+    text.setPos(-9.4, -4 - leaderBoardFontSize * 2);
+    text.setText("Leaderboard:");
+    text.draw(&game::layers[302], false);
+    for (Json::Value::ArrayIndex i = 0; i < this->leaderboard.size(); i++)
+    {
+        std::string name = this->leaderboard[i].get("name", "N/A").asString();
+        std::string time = this->leaderboard[i].get("time", "N/A").asString();
+        std::string score = std::to_string(this->leaderboard[i].get("score", 0).asUInt());
+        if (name.length() > maxNameLength)
+            name = name.substr(0, maxNameLength);
+        text.setPos(-9.4, -4 + (i + 1) * leaderBoardFontSize * 2);
+        text.setText(name + " " + std::string(maxNameLength - name.length() + 1, '.') + " " +
+                     score + std::string(maxScoreLength - score.length() + 1, ' ') + time);
+        text.draw(&game::layers[302], false);
+        if (i > 18)
+            break;
+    }
 }
 
 void game::EndScreenController::exit()
