@@ -47,11 +47,11 @@ int main(int argc, char **argv, char **envp)
         std::cout << "Controller3 CALLLLLED" << std::endl;
             glutLeaveMainLoop(); });
 
-    if (std::string(getenv("GALAGA")) == "dev")
+    if (getenv("GALAGA") && std::string(getenv("GALAGA")) == "dev")
         game::PERF::performanceManager.start();
     else
         glutFullScreen();
-        
+
     game::UI::start();
 
     return 0;
