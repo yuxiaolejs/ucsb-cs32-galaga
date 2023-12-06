@@ -5,3 +5,5 @@ Makefile
 ezg
 .vscode
 *.dump
+*.log
+*.err
