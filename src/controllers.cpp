@@ -301,6 +301,16 @@ void game::EndScreenController::tick()
         if (event.type == game::EVENT::Event::EventType::KEYBOARD_EVENT && event.data[0] == 'q')
             quit = true;
     }
+
+    if (dir)
+        counter++;
+    else
+        counter--;
+    if (counter >= 100)
+        dir = false;
+    else if (counter <= 20)
+        dir = true;
+    game::layers[0].shapes[2].opacity = (float)counter / 100.0;
 }
 
 void game::EndScreenController::init()
@@ -324,9 +334,19 @@ void game::EndScreenController::init()
 
     game::layers[0].shapes.push_back(shape);
 
+    shape = game::RES::Shape();
+    shape.texture = game::textureManager.getTexture("PRESS_Q");
+    shape.x = 0;
+    shape.y = 3.8;
+    shape.width = 6;
+    shape.height = 1;
+
+    game::layers[0].shapes.push_back(shape);
+
     game::layers.insert({301, game::RES::Layer()}); // Layer of score
-    game::layers.insert({302, game::RES::Layer()}); // Layer of score
-    game::RES::Text scoreText;
+    game::layers.insert({302, game::RES::Layer()}); // Layer of leaderboard
+
+    game::RES::Text scoreText; // Render score
     scoreText.setRatio(2.3);
     scoreText.setSize(0.2);
     scoreText.setPos(4.8, -1);
@@ -336,6 +356,14 @@ void game::EndScreenController::init()
     scoreText.setSize(0.6);
     scoreText.setText(std::to_string(score));
     scoreText.draw(&game::layers[301], false);
+
+    game::RES::Text text;
+    text.setRatio(2.3);
+    text.setSize(0.2);
+    text.setPos(-9.4, -4 - 0.2 * 2);
+    text.setText("Leaderboard Loading...");
+    text.draw(&game::layers[302], false);
+
     this->submitScore();
     this->leaderboard = game::HTTP::get("https://cs32.tianleyu.com/galaga/score");
     this->renderLeaderboard();
@@ -351,7 +379,7 @@ void game::EndScreenController::renderLeaderboard()
     text.setSize(leaderBoardFontSize);
     text.setPos(-9.4, -4 - leaderBoardFontSize * 2);
     text.setText("Leaderboard:");
-    text.draw(&game::layers[302], false);
+    text.draw(&game::layers[302], true);
     for (Json::Value::ArrayIndex i = 0; i < this->leaderboard.size(); i++)
     {
         std::string name = this->leaderboard[i].get("name", "N/A").asString();

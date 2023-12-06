@@ -100,6 +100,9 @@ namespace game
         Json::Value leaderboard;
 
         void renderLeaderboard();
+
+        bool dir = true;
+        int counter = 0;
     };
 }
 #endif
