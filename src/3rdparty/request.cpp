@@ -30,17 +30,17 @@ Json::Value game::HTTP::get(string url)
             myRequest.setOpt(myUrl);
             myRequest.setOpt(myHeaders);
             myRequest.setOpt(ws);
+            myRequest.setOpt<curlpp::options::WriteStream>(&os);
 
-            // myRequest.perform();
+            myRequest.perform();
 
-            // int code = curlpp::infos::ResponseCode::get(myRequest);
-            // if (code != 200)
-            // {
-            //     cout << "[fatal] Request failed with a code of " << code << endl;
-            //     exit(2);
-            // }
+            int code = curlpp::infos::ResponseCode::get(myRequest);
+            if (code != 200)
+            {
+                cout << "[fatal] Request failed with a code of " << code << endl;
+                exit(2);
+            }
 
-            os << myRequest;
             Json::Value root;
             Json::Reader reader;
             bool parsingSuccessful = reader.parse(os.str(), root);
@@ -85,17 +85,17 @@ Json::Value game::HTTP::post(string url, Json::Value data)
             myRequest.setOpt(myPostFields);
             myRequest.setOpt(myPostFieldSize);
             myRequest.setOpt(ws);
+            myRequest.setOpt<curlpp::options::WriteStream>(&os);
 
-            // myRequest.perform();
+            myRequest.perform();
 
-            // int code = curlpp::infos::ResponseCode::get(myRequest);
-            // if (code != 200)
-            // {
-            //     cout << "[fatal] Request failed with a code of " << code << endl;
-            //     exit(2);
-            // }
+            int code = curlpp::infos::ResponseCode::get(myRequest);
+            if (code != 200)
+            {
+                cout << "[fatal] Request failed with a code of " << code << endl;
+                exit(2);
+            }
 
-            os << myRequest;
             Json::Value root;
             Json::Reader reader;
             bool parsingSuccessful = reader.parse(os.str(), root);
