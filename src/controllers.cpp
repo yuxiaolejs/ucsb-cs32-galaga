@@ -6,11 +6,14 @@
 #include "lib/game.hpp"
 #include "lib/utils.hpp"
 #include "controllers.hpp"
+#include "text.hpp"
+#include "3rdparty/request.hpp"
 
 #include <GL/freeglut.h>
 #include <mutex>
 #include <thread>
 #include <cstdlib>
+#include <json/json.h>
 #include "vec.hpp"
 using game::vec::Vec2;
 void game::StartScreenController::tick()
@@ -130,6 +133,11 @@ void game::TestController::tick()
     // game::layers[1].shapes[0].rotation -= rotationSpeed;
     // game::layers[1].shapes[0].x += 0.005;
     frameCount++;
+    this->score++;
+    scoreText.setText("Score: " + std::to_string(score));
+    scoreText.draw(&game::layers[301]);
+    hpText.setText("HP: " + std::to_string(hp));
+    hpText.draw(&game::layers[302]);
 }
 
 void game::TestController::moveBackground()
@@ -152,6 +160,7 @@ void game::TestController::collisionDetection()
     if (ourShipHit)
     {
         // quit = true;
+        hp--;
         return;
     }
     for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
@@ -161,6 +170,7 @@ void game::TestController::collisionDetection()
         {
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
+            hp--;
             // quit = true;
             delete layersLock;
         }
@@ -170,9 +180,18 @@ void game::TestController::collisionDetection()
         {
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
+            this->score += 1000;
+            hp++;
             delete layersLock;
         }
     }
+    this->hpVerification();
+}
+
+void game::TestController::hpVerification()
+{
+    if (hp == 0)
+        quit = true;
 }
 
 void game::TestController::generateEnermyShips()
@@ -244,6 +263,17 @@ void game::TestController::init()
     game::layers.insert({201, game::RES::Layer()}); // Layer of projectiles (DO NOT TOUCH)
 
     this->projectileManager = game::projectile::ProjectileManager(&game::layers[201]);
+
+    game::layers.insert({301, game::RES::Layer()}); // Layer of score
+    game::layers.insert({302, game::RES::Layer()}); // Layer of hp
+
+    scoreText.setRatio(2.3);
+    scoreText.setSize(0.2);
+    scoreText.setPos(-9.5, -5);
+
+    hpText.setRatio(2.3);
+    hpText.setSize(0.2);
+    hpText.setPos(-9.5, -4.6);
 }
 
 bool game::TestController::outOfBound(game::RES::Shape &shape)
@@ -255,4 +285,98 @@ void game::TestController::exit()
 {
     std::cout << "TestController exit" << std::endl;
     game::layers.clear();
+}
+
+uint32_t game::TestController::getScore()
+{
+    return this->score;
+}
+
+void game::EndScreenController::tick()
+{
+    if (!game::eventQueue.empty())
+    {
+        // One time key down detection
+        game::EVENT::Event event = game::eventQueue.pop();
+        if (event.type == game::EVENT::Event::EventType::KEYBOARD_EVENT && event.data[0] == 'q')
+            quit = true;
+    }
+}
+
+void game::EndScreenController::init()
+{
+    game::layers.insert({301, game::RES::Layer()}); // Layer of score
+    game::layers.insert({302, game::RES::Layer()}); // Layer of score
+    game::RES::Text scoreText;
+    scoreText.setRatio(2.3);
+    scoreText.setSize(1);
+    scoreText.setPos(-5, 0);
+    scoreText.setText(std::to_string(score));
+    scoreText.draw(&game::layers[301]);
+    this->submitScore();
+    this->leaderboard = game::HTTP::get("https://cs32.tianleyu.com/galaga/score");
+    this->renderLeaderboard();
+}
+
+void game::EndScreenController::renderLeaderboard()
+{
+    game::RES::Text text;
+    text.setRatio(2.3);
+    text.setSize(0.2);
+    text.setPos(-9.4, -4.4);
+    text.setText("Leaderboard:");
+    text.draw(&game::layers[302], false);
+    const int maxNameLength = 15;
+    for (Json::Value::ArrayIndex i = 0; i < this->leaderboard.size(); i++)
+    {
+        std::string name = this->leaderboard[i].get("name", "N/A").asString();
+        std::string score = std::to_string(this->leaderboard[i].get("score", 0).asUInt());
+        if (name.length() > maxNameLength)
+            name = name.substr(0, maxNameLength);
+        text.setPos(-9.4, -4 + (i + 1) * 0.4);
+        text.setText(name + std::string(maxNameLength - name.length() + 1, '.') + " " + score);
+        text.draw(&game::layers[302], false);
+        if (i > 18)
+            break;
+    }
+
+    game::RES::Shape shape;
+    shape.texture = game::textureManager.getTexture("Gameover!");
+    shape.x = 0;
+    shape.y = -1;
+    shape.width = 8;
+    shape.height = 8;
+
+    game::layers[0].shapes.push_back(shape);
+
+    shape = game::RES::Shape();
+    shape.texture = game::textureManager.getTexture("LB_TEXT");
+    shape.x = 6.8;
+    shape.y = 5;
+    shape.width = 6;
+    shape.height = 1;
+
+    game::layers[0].shapes.push_back(shape);
+}
+
+void game::EndScreenController::exit()
+{
+}
+
+void game::EndScreenController::setScore(uint32_t score)
+{
+    this->score = score;
+}
+
+void game::EndScreenController::submitScore()
+{
+    Json::Value data;
+    data["score"] = this->score;
+    data["name"] = this->userName;
+    game::HTTP::post("https://cs32.tianleyu.com/galaga/score", data);
+}
+
+void game::EndScreenController::setUserName(std::string userName)
+{
+    this->userName = userName;
 }

@@ -3,7 +3,9 @@
 #include "lib/game.hpp"
 #include "lib/shape.hpp"
 #include "projectile.hpp"
+#include "text.hpp"
 #include "vec.hpp"
+#include <json/json.h>
 using game::vec::Vec2;
 namespace game
 {
@@ -27,6 +29,7 @@ namespace game
     {
     public:
         TestController() : Controller(){};
+        uint32_t getScore();
 
     private:
         void tick();
@@ -54,6 +57,13 @@ namespace game
 
         Vec2 shipVelocity;
 
+        uint32_t score = 0;
+        uint8_t hp = 1;
+
+        // Components:
+        game::RES::Text scoreText;
+        game::RES::Text hpText;
+
         // FUNCTIONS
         void calcVelocity();
         void moveBackground();
@@ -63,9 +73,33 @@ namespace game
 
         void collisionDetection();
 
+        void hpVerification();
+
         bool outOfBound(game::RES::Shape &shape);
 
         game::projectile::ProjectileManager projectileManager;
+    };
+
+    class EndScreenController : public Controller
+    {
+    public:
+        EndScreenController() : Controller(){};
+        void setScore(uint32_t score);
+        void setUserName(std::string userName);
+        void submitScore();
+
+    private:
+        void tick();
+        void init();
+        void exit();
+
+        // User defined
+        uint32_t score = 0;
+        std::string userName = "";
+
+        Json::Value leaderboard;
+
+        void renderLeaderboard();
     };
 }
 #endif
