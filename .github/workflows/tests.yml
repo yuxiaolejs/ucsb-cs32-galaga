@@ -20,6 +20,8 @@ jobs:
           sudo apt-get -y install libpng-dev
           sudo apt-get -y install zlib1g-dev
           sudo apt-get -y install freeglut3-dev
+          sudo apt-get -y install libcurl4-openssl-dev
+          sudo apt-get -y install libjsoncpp-dev
       - name: Make all binary
         run: |
           cmake .
