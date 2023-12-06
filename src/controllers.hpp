@@ -59,7 +59,7 @@ namespace game
 
         uint32_t score = 0;
         int user_hp = 10;
-        int boss_hp= 10;
+        int boss_hp= 10;    // TODO: add enemyType
 
         // Components:
         game::RES::Text scoreText;
