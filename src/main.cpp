@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     controller2.then([&]()
                      {
         std::cout << "Controller2 CALLLLLED" << std::endl;
-            std::cout << controller2.getScore() << std::endl;
+            controller3.setScore(controller2.getScore());
             controller3.start(); });
 
     controller3.then([&]()

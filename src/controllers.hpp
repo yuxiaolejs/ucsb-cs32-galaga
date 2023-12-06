@@ -83,11 +83,15 @@ namespace game
     {
     public:
         EndScreenController() : Controller(){};
+        void setScore(uint32_t score);
 
     private:
         void tick();
         void init();
         void exit();
+
+        // User defined
+        uint32_t score = 0;
     };
 }
 #endif

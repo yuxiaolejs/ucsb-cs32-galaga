@@ -303,8 +303,20 @@ void game::EndScreenController::tick()
 
 void game::EndScreenController::init()
 {
+    game::layers.insert({301, game::RES::Layer()}); // Layer of score
+    game::RES::Text scoreText;
+    scoreText.setRatio(2.3);
+    scoreText.setSize(1);
+    scoreText.setPos(-5, 0);
+    scoreText.setText(std::to_string(score));
+    scoreText.draw(&game::layers[301]);
 }
 
 void game::EndScreenController::exit()
 {
+}
+
+void game::EndScreenController::setScore(uint32_t score)
+{
+    this->score = score;
 }
