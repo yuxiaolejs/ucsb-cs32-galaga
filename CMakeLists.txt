@@ -5,6 +5,15 @@ set(CMAKE_CXX_FLAGS "-g")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
+# Begin git magic
+add_custom_target(
+    pre_build
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_MODULE_PATH}/Prebuild.cmake
+    COMMENT "Running pre-build actions..."
+)
+
+# End git magic
+
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(PNG REQUIRED)
@@ -26,6 +35,8 @@ add_executable(ezg
     ${GAME_BIZ}
     ${ENGINE_LIB}
 )
+add_dependencies(ezg pre_build)
+# add_definitions(-DGIT_BRANCH_NAME="${GIT_BRANCH}")
 
 target_link_libraries(ezg glut OpenGL::GL OpenGL::GLU)
 target_link_libraries(ezg png)

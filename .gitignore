@@ -7,3 +7,4 @@ ezg
 *.dump
 *.log
 *.err
+_cmake

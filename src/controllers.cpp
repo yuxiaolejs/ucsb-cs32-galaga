@@ -74,7 +74,7 @@ void game::StartScreenController::init()
     game::RES::Text text;
     text.setRatio(2.3);
     text.setSize(0.15);
-    text.setPos(4.3, 5.4);
+    text.setPos(2, 5.4);
     text.setText(game::VERSION_NUMBER);
     text.draw(&game::layers[301], false);
 
@@ -361,7 +361,7 @@ void game::EndScreenController::init()
     game::RES::Text text;
     text.setRatio(2.3);
     text.setSize(0.15);
-    text.setPos(4.3, 5.4);
+    text.setPos(2, 5.4);
     text.setText(game::VERSION_NUMBER);
     text.draw(&game::layers[303], false);
 

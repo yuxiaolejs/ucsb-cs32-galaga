@@ -10,6 +10,8 @@
 #include "event.hpp"
 #include "shape.hpp"
 
+#include "../_cmake/const.hpp"
+
 namespace game
 {
     class Controller
@@ -39,6 +41,6 @@ namespace game
     extern std::mutex layersMutex;
     extern std::ofstream logFile;
     const std::string API_PREFIX = "https://cs32.tianleyu.com/galaga";
-    const std::string VERSION_NUMBER = "Rev. 0.0.5   Stable Build    12/06/23";
+    const std::string VERSION_NUMBER = "Rev.  " + std::string(GIT_COMMIT_HASH).substr(0, 7) + " : " + std::string(GIT_BRANCH)+ " @ " + std::string(GIT_COMMIT_TIME);
 }
 #endif
