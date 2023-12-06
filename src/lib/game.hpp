@@ -4,6 +4,7 @@
 #include <functional>
 #include <map>
 #include <mutex>
+#include <fstream>
 #include "texture.hpp"
 #include "layer.hpp"
 #include "event.hpp"
@@ -36,5 +37,7 @@ namespace game
     extern game::RES::TextureManager textureManager;
     extern game::RES::TextureManager fontTextureManager;
     extern std::mutex layersMutex;
+    extern std::ofstream logFile;
+    const std::string API_PREFIX = "https://cs32.tianleyu.com/galaga";
 }
 #endif

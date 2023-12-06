@@ -24,5 +24,7 @@ namespace game::UTILS
     uint64_t highResTimestamp();
 
     bool findInEnvp(char **envp, std::string varToFind);
+
+    void redirectCout(std::string filename);
 }
 #endif

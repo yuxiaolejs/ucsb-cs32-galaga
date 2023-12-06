@@ -1,6 +1,9 @@
 #include "utils.hpp"
+#include "game.hpp"
 #include <chrono>
 #include <string>
+#include <fstream>
+#include <iostream>
 
 uint64_t game::UTILS::getTimestamp()
 {
@@ -36,4 +39,45 @@ bool game::UTILS::findInEnvp(char **envp, std::string varToFind)
         ptr++;
     }
     return false;
+}
+
+void game::UTILS::redirectCout(std::string filename)
+{
+    std::cout << "\033[0;31m";
+    std::cout << "\033[0;34m--------------------------------------------" << std::endl
+              << "  ________       .__                        " << std::endl
+              << " /  _____/_____  |  | _____     _________   " << std::endl
+              << "/   \\  ___\\__  \\ |  | \\__  \\   / ___\\__  \\  " << std::endl
+              << "\\    \\_\\  \\/ __ \\|  |__/ __ \\_/ /_/  > __ \\_" << std::endl
+              << " \\______  (____  /____(____  /\\___  (____  /" << std::endl
+              << "        \\/     \\/          \\//_____/     \\/ " << std::endl
+              << "\033[0;34m--------------------------------------------" << std::endl
+              << "\033[1;32m"
+              << " A CS 32 project (F23 w/ Burk K. & Liu J.)  " << std::endl
+              << "\033[0;34m--------------------------------------------" << std::endl
+              << "\033[0;35m"
+              << " Group Members:" << std::endl
+              << " - Andy J." << std::endl
+              << " - Luis B." << std::endl
+              << " - Luxiang Z." << std::endl
+              << " - Tianle Y." << std::endl
+              << "\033[0;34m--------------------------------------------" << std::endl
+              << "\033[1;32m"
+              << "   Active API gateway:\033[1;0m" << std::endl
+              << "      " << game::API_PREFIX << std::endl
+              << "\033[1;32m"
+              << "   Redirecting stdio to:\033[1;0m" << std::endl
+              << "      " << filename << std::endl
+              << "\033[0;34m--------------------------------------------" << std::endl
+              << "\033[1;32m"
+              << "   Rev. 0.0.3   Stable Build    12/06/23" << std::endl
+              << "\033[0;34m--------------------------------------------" << std::endl
+              << "\033[0;0m";
+    // game::logFile.open(filename);
+    // std::streambuf *coutbuf = std::cout.rdbuf();
+    // std::cout.rdbuf(logFile.rdbuf());
+
+    // Use C magic to redirect stdout and stderr to a file
+    freopen(filename.c_str(), "a+", stdout);
+    freopen((filename + ".err").c_str(), "a+", stderr);
 }

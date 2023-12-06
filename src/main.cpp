@@ -14,6 +14,8 @@
 
 int main(int argc, char **argv, char **envp)
 {
+    game::UTILS::redirectCout("galaga.log");
+
     game::UI::UIConf ui_config;
     ui_config.windowTitle = "Test Game";
     ui_config.windowWidth = 1920;

@@ -370,7 +370,7 @@ void game::EndScreenController::init()
     text.draw(&game::layers[302], false);
 
     this->submitScore();
-    this->leaderboard = game::HTTP::get("https://cs32.tianleyu.com/galaga/score");
+    this->leaderboard = game::HTTP::get(game::API_PREFIX + "/score");
     this->renderLeaderboard();
 }
 
@@ -415,7 +415,7 @@ void game::EndScreenController::submitScore()
     Json::Value data;
     data["score"] = this->score;
     data["name"] = this->userName;
-    game::HTTP::post("https://cs32.tianleyu.com/galaga/score", data);
+    game::HTTP::post(game::API_PREFIX + "/score", data);
 }
 
 void game::EndScreenController::setUserName(std::string userName)
