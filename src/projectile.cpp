@@ -140,7 +140,7 @@ void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly)
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     projectiles.push_back(new StupidProjectile(position, isAlly));
     Shape shape;
-    shape.texture = game::textureManager.getTexture("proj1");
+    shape.texture = game::textureManager.getTexture("proj1234");
     shape.x = position.x;
     shape.y = position.y;
     shape.width = 0.5;
@@ -155,7 +155,7 @@ void ProjectileManager::spawnStupidProjectile(Vec2 position, bool isAlly, Vec2 v
     std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
     projectiles.push_back(new StupidProjectile(position, isAlly, velocity));
     Shape shape;
-    shape.texture = game::textureManager.getTexture("proj1");
+    shape.texture = game::textureManager.getTexture("proj1234");
     shape.x = position.x;
     shape.y = position.y;
     shape.width = 0.5;
