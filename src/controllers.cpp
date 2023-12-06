@@ -315,8 +315,18 @@ void game::EndScreenController::init()
     shape.texture = game::textureManager.getTexture("Gameover!");
     shape.x = 0;
     shape.y = -1;
-    shape.width = 10;
-    shape.height = 10;
+    shape.width = 8;
+    shape.height = 8;
+
+    game::layers[0].shapes.push_back(shape);
+
+    shape = game::RES::Shape();
+    shape.texture = game::textureManager.getTexture("LB_TEXT");
+    shape.x = 6.8;
+    shape.y = 5;
+    shape.width = 6;
+    shape.height = 1;
+
     game::layers[0].shapes.push_back(shape);
 }
 
