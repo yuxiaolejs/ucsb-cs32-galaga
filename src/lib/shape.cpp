@@ -14,7 +14,7 @@ game::RES::Shape::Shape()
     this->y = 0;
     this->texture = Texture();
     this->name = "noName";
-    this->id = 0;
+    this->id = idCounter++;
     this->rotation = 0;
     this->opacity = 1;
     this->mode = GL_QUADS;
@@ -31,3 +31,5 @@ std::vector<std::pair<GLfloat, GLfloat>> game::RES::Shape::getQuadsVertices()
     quadsVertices.push_back({this->x - this->width / 2, -this->y + this->height / 2});
     return quadsVertices;
 }
+
+u_int32_t game::RES::Shape::idCounter = 0;

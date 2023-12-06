@@ -20,6 +20,10 @@ jobs:
           sudo apt-get -y install libpng-dev
           sudo apt-get -y install zlib1g-dev
           sudo apt-get -y install freeglut3-dev
+          sudo apt-get -y install libcurlpp-dev
+          sudo apt-get -y install libjsoncpp-dev
+          sudo cp /usr/include/jsoncpp/* /usr/include -r
+
       - name: Make all binary
         run: |
           cmake .

@@ -15,6 +15,7 @@
 #include "utils.hpp"
 #include "layer.hpp"
 #include "game.hpp"
+#include "performance.hpp"
 
 namespace game::UI
 {
@@ -28,14 +29,15 @@ int frameCount = 0;
 
 void game::UI::idle()
 {
-    u_int32_t now = game::UTILS::getTimestamp();
-    if (now - lastFpsReport > 1000)
-    {
-        std::cout << "FPS: " << frames << std::endl;
-        lastFpsReport = now;
-        frames = 0;
-    }
-    frames++;
+    // u_int32_t now = game::UTILS::getTimestamp();
+    // if (now - lastFpsReport > 1000)
+    // {
+    //     std::cout << "FPS: " << frames << std::endl;
+    //     lastFpsReport = now;
+    //     frames = 0;
+    // }
+    // frames++;
+    game::PERF::performanceManager.fps++;
     // std::cout << "Idle, Frame Count:" << frames << std::endl;
     glutPostRedisplay();
 }

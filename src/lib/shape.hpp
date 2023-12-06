@@ -9,13 +9,14 @@ namespace game::RES
     class Shape
     {
     public:
+        static u_int32_t idCounter;
         Shape();
         float width;
         float height;
         float x;
         float y;
 
-        float rotation;
+        int rotation;
         float opacity;
 
         GLenum mode;
