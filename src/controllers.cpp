@@ -310,6 +310,14 @@ void game::EndScreenController::init()
     scoreText.setPos(-5, 0);
     scoreText.setText(std::to_string(score));
     scoreText.draw(&game::layers[301]);
+
+    game::RES::Shape shape;
+    shape.texture = game::textureManager.getTexture("Gameover!");
+    shape.x = 0;
+    shape.y = -1;
+    shape.width = 10;
+    shape.height = 10;
+    game::layers[0].shapes.push_back(shape);
 }
 
 void game::EndScreenController::exit()
