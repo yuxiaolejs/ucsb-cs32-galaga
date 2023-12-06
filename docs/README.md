@@ -2,6 +2,9 @@
 
 An OpenGL game!
 
+## Leader board!
+[Check out our leader board here]([leaderboard.html](https://yuxiaolejs.github.io/ucsb-cs32-galaga/leaderboard.html))
+
 ## General Documentation
 ### System Requirements
 - Platform: Any that supports OpenGL, FreeGLUT, gcc, cmake

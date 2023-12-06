@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #2f3136;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <hr class="my-5">
+        <h1>Leader board</h1>
+        <hr class="my-3">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Score</td>
+                        <td>Time</td>
+                        <td>IP</td>
+                    </tr>
+                </thead>
+                <tbody id="tb"></tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+<script>
+    function getLeaderboard() {
+        fetch('https://cs32.tianleyu.com/galaga/score')
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                let tb = document.getElementById('tb')
+                tb.innerHTML = ''
+                data.forEach((item) => {
+                    let tr = document.createElement('tr')
+                    let td1 = document.createElement('td')
+                    let td2 = document.createElement('td')
+                    let td3 = document.createElement('td')
+                    let td4 = document.createElement('td')
+                    td1.innerHTML = item.score
+                    td2.innerHTML = item.name
+                    td3.innerHTML = item.time
+                    td4.innerHTML = item.ip
+                    tr.appendChild(td2)
+                    tr.appendChild(td1)
+                    tr.appendChild(td3)
+                    tr.appendChild(td4)
+                    tb.appendChild(tr)
+                })
+            })
+    }
+    getLeaderboard()
+</script>
+
+</html>
