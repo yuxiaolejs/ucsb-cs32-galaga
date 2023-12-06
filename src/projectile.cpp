@@ -53,7 +53,7 @@ SmartProjectile::SmartProjectile(Vec2 position, bool isAlly, u_int32_t target, L
     this->isAlly = isAlly;
     this->targetLayer = targetLayer;
     this->target = target;
-    this->ttl = 400;    // plus explosion duration
+    this->ttl = 400;    // including explosion duration
 }
 
 void SmartProjectile::tick()
