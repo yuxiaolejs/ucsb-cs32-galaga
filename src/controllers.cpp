@@ -135,6 +135,7 @@ void game::TestController::tick()
     }
     delete layersLock;
     this->generateEnermyShips();
+    this->generateBossShips();
     this->generateProjectiles();
     this->collisionDetection();
     this->moveBackground();
@@ -145,7 +146,7 @@ void game::TestController::tick()
     this->score++;
     scoreText.setText("Score: " + std::to_string(score));
     scoreText.draw(&game::layers[301]);
-    hpText.setText("HP: " + std::to_string(hp));
+    hpText.setText("HP: " + std::to_string(user_hp));
     hpText.draw(&game::layers[302]);
 }
 
@@ -169,7 +170,7 @@ void game::TestController::collisionDetection()
     if (ourShipHit)
     {
         // quit = true;
-        hp--;
+        user_hp--;
         this->hpVerification();
         return;
     }
@@ -180,7 +181,7 @@ void game::TestController::collisionDetection()
         {
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
-            hp -= 3;
+            user_hp -= 3;
             this->hpVerification();
             // quit = true;
             delete layersLock;
@@ -192,7 +193,7 @@ void game::TestController::collisionDetection()
             std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
             shipVec.erase(shipVec.begin() + i);
             this->score += 1000;
-            hp++;
+            user_hp++;
             this->hpVerification();
             delete layersLock;
         }
@@ -201,7 +202,7 @@ void game::TestController::collisionDetection()
 
 void game::TestController::hpVerification()
 {
-    if (hp <= 0)
+    if (user_hp <= 0)
         quit = true;
 }
 
@@ -228,6 +229,24 @@ void game::TestController::generateEnermyShips()
 
         game::layers[1].shapes.push_back(shape);
     }
+}
+
+void game::TestController::generateBossShips()
+{
+    game::RES::Shape shape;
+    if (frameCount == 500)  // TODO
+    {
+        shape = game::RES::Shape();
+        shape.texture = game::textureManager.getTexture("ship_boss"); // Boss ship
+        shape.x = 10;
+        shape.y = 3;
+        shape.width = 4;
+        shape.height = 4;
+        shape.rotation = 90;
+
+        game::layers[1].shapes.push_back(shape);
+    }
+    
 }
 
 void game::TestController::generateProjectiles()

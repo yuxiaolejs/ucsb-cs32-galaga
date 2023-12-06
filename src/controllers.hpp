@@ -58,7 +58,8 @@ namespace game
         Vec2 shipVelocity;
 
         uint32_t score = 0;
-        int hp = 10;
+        int user_hp = 10;
+        int boss_hp= 10;
 
         // Components:
         game::RES::Text scoreText;
@@ -69,6 +70,7 @@ namespace game
         void moveBackground();
 
         void generateEnermyShips();
+        void generateBossShips();
         void generateProjectiles();
 
         void collisionDetection();
