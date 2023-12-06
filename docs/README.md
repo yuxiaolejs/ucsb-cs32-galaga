@@ -1,3 +1,10 @@
+# Group Members
+- Andy J.
+- Luis B.
+- Luxiang Z.
+- Tianle Y.
+
+
 ## UCSB CS32 GALAGA
 
 An OpenGL game!
@@ -21,6 +28,8 @@ An OpenGL game!
   | OpenGL   | 4.1     |
   | FreeGLUT | ^3.4.0  |
   | libpng   | -       |
+  | curlpp   | -       |
+  | jsoncpp  | -       |
 
 
 ### Compiling the program
@@ -36,9 +45,12 @@ make
 
 ### How to play
 - Use `w, s, a, d` to move
-- Avoid enermy's projectile (todo)
-- Shoot enermy with projectile (todo)
+- Avoid enermy's projectile
+- Shoot enermy with projectile
+- Destroy enermy ships to recover hp
+- Prevent losing all hp
 
 ## Check point info:
 - [Check point 1](ckpt1.md)
 - [Check point 2](ckpt2.md)
+- [Check point 3](ckpt3.md)
