@@ -225,7 +225,7 @@ game::PERF::performanceManager.start();
 ```
 
 #### game::Controller
-Controller class, used to control the entire game lifecycle. Please note that this is an abstract class and you need to create a subclass from it and declare a custom controller before using it.
+Controller class, used to control the entire game lifecycle. Please note that this is an abstract class and you need to create a derived class from it and declare a custom controller before using it.
 
 It's defined as follows:
 ```
@@ -316,3 +316,89 @@ controller3.then([&]()
                   {
         glutLeaveMainLoop(); });
 ```
+## The Game
+This game is driven by the following controllers, which run in order from top to bottom:
+- StartScreenController
+- TestController
+- EndScreenController
+
+## Controller
+All controllers mentioned below are located in controllers.cpp, please check the source code for details
+### StartScreenController
+This controller is the startup interface controller, which renders the entire startup interface in the init method.
+In the tick method, the controller checks whether the user clicked the `c` key to decide whether to start the game, and also adds a breathing animation to the prompt character for clicking the c key.
+#### External dependencies
+- None
+#### Custom member variables
+The following custom member variables are undefined in the parent class Controller and are added in the derived class.
+- bool dir - breathing effect direction flag
+- int counter - breathing effect progress counter
+#### Custom functions
+The following custom functions are not defined in the parent class Controller and are added in the derived class
+- None
+
+### TestController
+The main interface controller of the game is used to control the logic of the entire game, including player movement, enemy generation, projectile generation, collision detection, out-of-bounds detection, score calculation, health value calculation, and death detection. It also take in `w, s, a, d` key events to move the ally ship accordingly.
+#### External dependencies
+- text.cpp
+   - Text class
+- projectile.cpp
+   - StupidProjectile class
+   -SmartProjectile class
+   - ProjectileManager class
+-vec.hpp
+   - Vec2 class
+#### Custom member variables
+The following custom member variables are undefined in the parent class Controller and are added in the derived class.
+- constant
+   - const float MAX_HORIZ_COORD - Maximum absolute horizontal coordinate value
+   - const float MAX_VERTI_COORD - maximum absolute value of vertical coordinate
+   - const float COLLISION_BOX_RADIUS - Collision box radius
+   - const size_t ENERMY_SHIPS_IN_A_GEN - Number of enemies spawned in a single attempt
+   - const size_t FRAMES_PER_ALLY_PROJECTILE_GEN - friendly missile launch interval
+   - const size_t FRAMES_PER_ENERMY_PROJECTILE_GEN - Enemy missile launch interval
+- variables
+   - int framesPerShipGeneration - Ship generation interval
+   - Shape background - background element object
+   - int framesSinceLastShipGeneration - Count of frames since the last ship generation
+   - uint64_t frameCount - frame count
+   - Vec2 shipVelocity - Friendly ship speed
+   - uint32_t score - player score
+   - int hp - player health value
+   - game::RES::Text scoreText - player score display font object
+   - game::RES::Text hpText - player health value display font object
+   - game::projectile::ProjectileManager projectileManager - projectile manager
+#### Custom functions
+The following custom functions are not defined in the parent class Controller and are added in the derived class
+-private:
+   - void calcVelocity() - Calculate velocity (deprecated)
+   - void moveBackground() - Translates the background to the left, causing the spacecraft to move to the right.
+   - void generateEnermyShips() - Generate enemy ships and use random numbers to determine whether to generate them.
+   - void generateProjectiles() - launches projectiles, all ships launch StupidProjectile, and a random enemy launches SmartProjectile
+   - void collisionDetection() - detects collision (ship/ship, projectile/ship), and completes blood volume operation at the same time
+   - void hpVerification() - blood volume detection, if the blood volume is too low, the game will end
+   - bool outOfBound(game::RES::Shape &shape) - out-of-bounds detection, returns whether an element leaves the visible range of the screen
+
+### EndScreenController
+This controller is an exit interface controller. It renders the entire game end interface in the init method. At the same time, it uses the http tool in 3rdparty to initiate an http request to the api server to obtain and render the leaderboard. In the tick method, the controller checks whether the user clicked the `q` key to decide whether to exit, and also adds a breathing animation to the prompt character for clicking the q key.
+#### External dependencies
+- text.cpp
+   - Text class
+- 3rdparty/request.cpp
+   - HTTP::get function
+   - HTTP::post function
+#### Custom member variables
+The following custom member variables are undefined in the parent class Controller and are added in the derived class.
+- uint32_t score - score for display, default is 0
+- std::string userName - the name of the current player, default is ""
+- Json::Value leaderboard - leaderboard data, empty by default
+- bool dir - breathing effect direction flag
+- int counter - breathing effect progress counter
+#### Custom function
+The following custom functions are not defined in the parent class Controller and are added in the derived class
+- public:
+   - void setScore(uint32_t score) - Called in main.cpp to set the user's score for this game. It should be called before start()
+   - void setUserName(std::string userName) - called in main.cpp to set the user name, should be called before start()
+   - void submitScore() - Called in main.cpp, submit the current user score to the api server and join the ranking list
+-private:
+   - void renderLeaderboard() - Read the leaderboard information in the member variable Json::Value leaderboard and render it on the screen using the Text class
