@@ -46,44 +46,44 @@ Following functions are defined, please go to corresponding hpp file for details
 | game::UI    | init             | int      | int argc, char **argv, UIConf conf | Init OpenGL window                 |
 | game::UI    | start            | -        | -                                  | Start OpenGL rendering loop        |
 
-## 编程接口
-### 总览
-作为用户，你不需要知道OpenGL是如何运行的，你只需要使用以下编程接口与其互动
+## APIs
+### Overview
+As a user, you don't need to know how OpenGL runs, you just need to interact with it using the following programming interfaces
 - std::mutex game::layersMutex
-  - 这是game::layers对象的锁
-  - 请在向layers对象写入之前使用lock_guard获取本锁
+  - This is a lock for game::layers
+  - Please obtain this using lock_guard before writing to layers object
 
 - std::map<int, game::RES::Layer> game::layers
-  - 这是游戏内的全部图层，map中的int为显示顺序，Layer为图层对象
-  - 注意！向此对象写入之前请先加锁
+  - This is all the layers in the game, int in the map indicates the order of display
+  - Obtain lock before writing to this!
 
 - game::EVENT::EventQueue game::eventQueue
-  - 这是游戏的事件队列，所有键盘事件都会被推入此队列
-  - 请务必定期使用pop方法缩减队列，队列溢出后将无法获取事件
+  - This is the game's event queue, all keyboard events will be pushed into this queue
+  - Please be sure to use the pop method to reduce the queue regularly. Events will not be obtained after the queue overflows.
 
 - game::RES::TextureManager game::textureManager
-  - 材质管理器，用于管理全局元素材质
-  - 通常在窗口创建之后，循环创建之前，用于加载材质
+  - Texture manager, used to manage global element textures
+  - Usually used to load textures after the window is created and before the loop is created.
 
 - game::RES::TextureManager game::fontTextureManager
-  - 字体材质管理器，用于导入管理字体图片
-  - 使用方法与textureManager类似
-  - 请注意，字体必须是恒宽的
+  - Font texture manager, used to import and manage font images
+  - The usage is similar to textureManager
+  - Please note that the font must be constant width
 
 - game::PERF::PerformanceManager game::PERF::performanceManager
-  - 游戏性能监视器
-  - 使用performanceManager.start()来启动性能监视器
+  - Game performance monitor
+  - Use performanceManager.start() to start the performance monitor
 
 - game::Controller
-  - 控制器类，不是全局对象
-  - 这是一个抽象类，用于帮助用户构建游戏控制器
-  - 请在设计控制器类时继承本类
+  - Controller class, not global object
+  - This is an abstract class used to help users build game controllers
+  - Please derive from this class when designing the controller class
 
-### 详解
+### Detailed explaination
 #### std::map<int, game::RES::Layer> game::layers
-这是一个全局对象，用来存储所有屏幕上显示的图层，每一个图层又包含一个向量，用于承载所有该图层内的元素。最小单位为Shape，请参见类定义详解。本对象异常重要，会被频繁读取，请**务必遵守game::layersMutex的加锁规范**。
+This is a global object used to store all layers displayed on the screen. Each layer contains a vector used to carry all elements in the layer. The smallest unit is Shape, please refer to the detailed explanation of class definition. This object is extremely important and will be read frequently. Please **be sure to comply with the locking specifications of game::layersMutex**.
 
-用例：创建一个元素，使其显示为res/logo.png的材质
+Use case: Create an element that displays as a texture for res/logo.png
 ```
 game::layers.insert({1, game::RES::Layer()});
 
@@ -98,9 +98,9 @@ game::layers[0].shapes.push_back(shape);
 ```
 
 #### std::mutex game::layersMutex
-这是一个锁对象，请务必在修改game::layers的任何内容之前获取本锁。本锁异常重要，因为本游戏渲染线程和控制器线程异步运行，可能会出现在渲染线程读取game::layers内容时其内容被修改。由于渲染线程与控制器线程运行周期相同，该状况较为普遍。在大多数情况下，没有正确获取锁会导致程序崩溃（在第二周被验证）。目前为止，未观测到不加锁读取产生的错误，请注意，如果多个控制器同时运行，则必须在读取之前加锁。
+This is a lock object. Please be sure to obtain this lock before modifying any content in game::layers. This lock is extremely important because the game rendering thread and the controller thread run asynchronously, and the content of game::layers may be modified when the rendering thread reads the content. This situation is common because the rendering thread and the controller thread run on the same cycle. In most cases, not acquiring the lock correctly will cause the program to crash (verified in week 2). So far, no errors have been observed from reading without locking, please note that if multiple controllers are running simultaneously, locking must be performed before reading.
 
-用例：出界检测
+Use case: out-of-bounds detection
 ```
 std::lock_guard<std::mutex> *layersLock = new std::lock_guard<std::mutex>(game::layersMutex);
 for (size_t i = 1; i < game::layers[1].shapes.size(); i++)
@@ -115,11 +115,11 @@ delete layersLock;
 ```
 
 #### game::EVENT::EventQueue game::eventQueue
-事件队列，内含两大功能：
-- 触发事件
-- 持续按键
+The event queue contains two major functions:
+- Triggerred event
+- Continuous key press
 
-其中，触发事件必须被处理，否则事件队列在超过10个事件未被触发之后会溢出。该队列为std::queue\<Event>，包含事件对象，定义如下：
+Among them, the triggering event must be processed, otherwise the event queue will overflow after more than 10 events are triggered. The queue is std::queue\<Event>, which contains event objects and is defined as follows:
 ```
 struct Event
 {
@@ -135,16 +135,16 @@ struct Event
     std::vector<int> data;
 };
 ```
-暴露方法：
-- Event pop() - 用于获取队头事件，请使用该方法处理事件
-- bool empty() - 返回队列是否为空，请使用该方法决定是否需要处理事件
-- bool overflow() - 返回队列是否溢出，调试使用
+Exposure method:
+- Event pop() - used to obtain the queue head event, please use this method to handle the event
+- bool empty() - Returns whether the queue is empty. Please use this method to decide whether the event needs to be processed.
+- bool overflow() - returns whether the queue overflows, used for debugging
 
-暴露对象：
-- std::set<int> pressedKeys - 被按下的按键之键码，用于持续按键检测
-- bool block - 禁止新事件输入的标志
+Exposed objects:
+- std::set<int> pressedKeys - the key code of the pressed key, used for continuous key detection
+- bool block - flag to disable new event input
 
-用例： 检测是否退出，检测是否移动
+Use cases: Detect whether to exit, detect whether to move
 ```
 if (!game::eventQueue.empty())
 {
@@ -166,13 +166,14 @@ if (eqk.find('w') != eqk.end() && ourShip.y > -MAX_VERTI_COORD)
 ```
 
 #### game::RES::TextureManager game::textureManager
-该对象为全局材质管理器，用于加载和分配材质。该管理器可实现材质的单次加载和自动管理，便于节约内存空间。有两个重要的生命周期需要注意：
-- 加载材质
-  - void changePath(std::string path) - 更改材质加载路径，默认为"res/"
-  - void loadAllTextures(bool overrideColor = false, uint8_t r = 0, uint8_t g = 0, uint8_t b = 0) - 加载该路径下所有材质，可选覆写颜色，如果启用覆写颜色，将只保留alpha通道，将其他所有通道覆写为指定颜色。**注意，本方法只会加载PNG文件**
-- 获取材质
-  - Texture &getTexture(std::string fileName) - 获取指定材质，注意这里的文件名不包括路径及扩展名。例：获取“res/a.png”则直接调用getTexture("a")。
-  - 返回对象为一个材质对象，定义如下：
+This object is the global texture manager and is used to load and assign textures. This manager enables single loading and automatic management of textures to save memory space. There are two important life cycles to note:
+- Load textures
+   - void changePath(std::string path) - Change the texture loading path, the default is "res/"
+   - void loadAllTextures(bool overrideColor = false, uint8_t r = 0, uint8_t g = 0, uint8_t b = 0) - Load all textures under this path, with optional override color. If override color is enabled, only the alpha channel will be retained. Overwrites all other channels to the specified color. **Note, this method will only load PNG files**
+- Get texture
+   - Texture &getTexture(std::string fileName) - Get the specified texture. Note that the file name here does not include the path and extension. Example: To obtain "res/a.png", directly call getTexture("a").
+   - The returned object is a texture object, defined as follows:
+
 ```
 struct Texture
 {
@@ -192,9 +193,9 @@ private:
     bool loadPngImage(bool overrideColor = false, uint8_t r = 0, uint8_t g = 0, uint8_t b = 0);
 };
 ```
-*大多数情况下，材质对象不需要修改就可以直接使用。请不要随意修改材质对象的成员变量*
+*In most cases, texture objects can be used directly without modification. Please do not modify the member variables of the texture object at will*
 
-用例：
+Use case:
 ```
 // Load texture, must be in main.cpp, between UI::init and UI::start
 game::textureManager.loadAllTextures();
@@ -204,9 +205,9 @@ shape.texture = game::textureManager.getTexture("logo");
 ```
 
 #### game::RES::TextureManager game::fontTextureManager
-同样也是材质管理器，但是用于管理字体文件，详情请参考上条。
+It is also a texture manager, but it is used to manage font files. Please refer to the previous part for details.
 
-用例：
+Example:
 ```
 // Load texture, must be in main.cpp, between UI::init and UI::start
 game::fontTextureManager.changePath("res/font1/");
@@ -214,19 +215,19 @@ game::fontTextureManager.loadAllTextures(true, 255, 255, 255);
 ```
 
 #### game::PERF::PerformanceManager
-游戏性能管理器，用于在终端输出实时游戏性能信息，只做调试使用，请勿用于生产。
-暴露方法：
-- game::PERF::performanceManager.start() - 启动性能管理器，启动后将覆写一切打印到终端的内容，请在调试输出时禁用。
+The game performance manager is used to output real-time game performance information on the terminal. It is only used for debugging and should not be used for production.
+Exposure method:
+- game::PERF::performanceManager.start() - Start the performance manager. After startup, everything printed to the terminal will be overwritten. Please disable it when debugging output.
 
-用例：
+Example:
 ```
 game::PERF::performanceManager.start();
 ```
 
 #### game::Controller
-控制器类，用于控制整个游戏的声明周期。请注意这是一个抽象类，在使用之前需要从其创建子类，声明自定义的控制器。
+Controller class, used to control the entire game lifecycle. Please note that this is an abstract class and you need to create a subclass from it and declare a custom controller before using it.
 
-本类声明如下：
+It's defined as follows:
 ```
 class Controller
 {
@@ -249,13 +250,13 @@ protected:
     bool quit = false;
 };
 ```
-其中有三个必须实现的抽象方法：
-- tick() - 每一个逻辑帧被调用，用于连续处理游戏逻辑
-  - 可以使用quit标记退出，将quit设置为true之后，控制器将在下一帧开始之前退出
-- init() - 控制器启动时被调用，用于初始化游戏对象
-- exit() - 控制器退出时被调用，用于清理控制器内部元素
+There are three abstract methods that **must** be implemented:
+- tick() - called every logical frame for continuous processing of game logic
+   - You can exit using the `quit` flag. After setting `quit` to true, the controller will exit before the next frame starts.
+- init() - called when the controller starts, used to initialize the game object
+- exit() - called when the controller exits, used to clean up the internal elements of the controller
 
-用例：
+Example:
 ```
 void game::StartScreenController::tick()
 {
@@ -291,11 +292,11 @@ void game::StartScreenController::exit()
 }
 ```
 
-暴露方法：
-- start() - 启动该控制器，调用本方法将启动当前控制器对象，并将其置于新线程内运行
-- then(std::function<void()> callback) - 指定回调函数，传入的回调函数将在该控制器退出之后被调用
+Exposure method:
+- start() - Start the controller. Calling this method will start the current controller object and place it to run in a new thread.
+- then(std::function<void()> callback) - Specify the callback function. The passed callback function will be called after the controller exits.
 
-用例：
+Example:
 ```
 game::StartScreenController controller;
 game::TestController controller2;
@@ -316,4 +317,4 @@ controller3.then([&]()
         glutLeaveMainLoop(); });
 ```
 
-# To do
+# End of engine doc, starting game doc
