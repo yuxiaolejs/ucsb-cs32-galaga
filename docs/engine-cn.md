@@ -317,5 +317,89 @@ controller3.then([&]()
         glutLeaveMainLoop(); });
 ```
 
+## 游戏本体
+本游戏由以下几个控制器驱动，按照从上到下的顺序依次运行：
+- StartScreenController
+- TestController
+- EndScreenController
 
-# 引擎部分结束，游戏本体待续
+## 控制器
+所有以下提到的控制器均位于controllers.cpp，请查看源码了解详情
+### StartScreenController
+该控制器为启动界面控制器，在init方法里渲染了整个启动界面。
+在tick方法里，该控制器检查用户是否点击了`c`键以决定是否开始游戏，同时给点击c键的提示字符添加呼吸动画。
+#### 外部依赖
+- 无
+#### 自定义成员变量
+以下自定义成员变量为在父类Controller中未定义，在子类中添加的成员变量
+- bool dir - 呼吸效果方向标志
+- int counter - 呼吸效果进度计数器
+#### 自定义函数
+以下自定义函数为在父类Controller中未定义，在子类中添加的函数
+- 无
+
+### TestController
+游戏主界面控制器，用于控制整个游玩的逻辑，包括玩家移动，敌人生成，投掷物生成，碰撞判断，出界判断，分数计算，生命值计算，死亡判断
+#### 外部依赖
+- text.cpp
+  - Text 类
+- projectile.cpp
+  - StupidProjectile 类
+  - SmartProjectile 类
+  - ProjectileManager 类
+- vec.hpp
+  - Vec2 类
+#### 自定义成员变量
+以下自定义成员变量为在父类Controller中未定义，在子类中添加的成员变量
+- 常量
+  - const float MAX_HORIZ_COORD
+  - const float MAX_VERTI_COORD
+  - const float COLLISION_BOX_RADIUS
+  - const size_t ENERMY_SHIPS_IN_A_GEN
+  - const size_t FRAMES_PER_ALLY_PROJECTILE_GEN
+  - const size_t FRAMES_PER_ENERMY_PROJECTILE_GEN
+- 变量
+  - int framesPerShipGeneration;
+  - Shape background;
+  - int framesSinceLastShipGeneration;
+  - uint64_t frameCount
+  - Vec2 shipVelocity
+  - uint32_t score
+  - int hp
+  - game::RES::Text scoreText
+  - game::RES::Text hpText
+  - game::projectile::ProjectileManager projectileManager
+#### 自定义函数
+以下自定义函数为在父类Controller中未定义，在子类中添加的函数
+- private:
+  - void calcVelocity()
+  - void moveBackground()
+  - void generateEnermyShips()
+  - void generateProjectiles()
+  - void collisionDetection()
+  - void hpVerification()
+  - bool outOfBound(game::RES::Shape &shape)
+
+### EndScreenController
+该控制器为退出界面控制器，在init方法里渲染了整个游戏结束界面，同时使用3rdparty中的http工具向api服务器发起http请求，获取并渲染排行榜。在tick方法中，该控制器检查用户是否点击了`q`键以决定是否退出，同时给点击q键的提示字符添加呼吸动画。
+#### 外部依赖
+- text.cpp
+  - Text类
+- 3rdparty/request.cpp
+  - HTTP::get 函数
+  - HTTP::post 函数
+#### 自定义成员变量
+以下自定义成员变量为在父类Controller中未定义，在子类中添加的成员变量
+- uint32_t score - 用于显示的分数，默认为0
+- std::string userName - 当前玩家的名字，默认为""
+- Json::Value leaderboard - 排行榜数据，默认为空
+- bool dir - 呼吸效果方向标志
+- int counter - 呼吸效果进度计数器
+#### 自定义函数
+以下自定义函数为在父类Controller中未定义，在子类中添加的函数
+- public:
+  - void setScore(uint32_t score) - 在main.cpp中调用，设置用户此次游玩的分数，应在start()之前调用
+  - void setUserName(std::string userName) - 在main.cpp中调用，设置用户名，应在start()之前调用
+  - void submitScore() - 在main.cpp中调用，将当前用户分数提交到api服务器，加入排行榜
+- private:
+  - void renderLeaderboard() - 读取成员变量Json::Value leaderboard中的排行榜信息并使用Text类渲染在屏幕上

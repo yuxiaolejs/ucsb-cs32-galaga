@@ -316,5 +316,3 @@ controller3.then([&]()
                   {
         glutLeaveMainLoop(); });
 ```
-
-# End of engine doc, starting game doc
