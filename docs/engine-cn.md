@@ -173,6 +173,7 @@ if (eqk.find('w') != eqk.end() && ourShip.y > -MAX_VERTI_COORD)
 - 获取材质
   - Texture &getTexture(std::string fileName) - 获取指定材质，注意这里的文件名不包括路径及扩展名。例：获取“res/a.png”则直接调用getTexture("a")。
   - 返回对象为一个材质对象，定义如下：
+
 ```
 struct Texture
 {
