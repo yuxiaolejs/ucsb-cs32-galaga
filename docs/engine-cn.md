@@ -325,21 +325,26 @@ controller3.then([&]()
 
 ## 控制器
 所有以下提到的控制器均位于controllers.cpp，请查看源码了解详情
+
 ### StartScreenController
 该控制器为启动界面控制器，在init方法里渲染了整个启动界面。
 在tick方法里，该控制器检查用户是否点击了`c`键以决定是否开始游戏，同时给点击c键的提示字符添加呼吸动画。
+
 #### 外部依赖
 - 无
+
 #### 自定义成员变量
 以下自定义成员变量为在父类Controller中未定义，在子类中添加的成员变量
 - bool dir - 呼吸效果方向标志
 - int counter - 呼吸效果进度计数器
+
 #### 自定义函数
 以下自定义函数为在父类Controller中未定义，在子类中添加的函数
 - 无
 
 ### TestController
 游戏主界面控制器，用于控制整个游玩的逻辑，包括玩家移动，敌人生成，投掷物生成，碰撞判断，出界判断，分数计算，生命值计算，死亡判断。同时提供 `w, s, a, d` 按键事件判断来移动友方飞船。
+
 #### 外部依赖
 - text.cpp
   - Text 类
@@ -349,6 +354,7 @@ controller3.then([&]()
   - ProjectileManager 类
 - vec.hpp
   - Vec2 类
+
 #### 自定义成员变量
 以下自定义成员变量为在父类Controller中未定义，在子类中添加的成员变量
 - 常量
@@ -369,6 +375,7 @@ controller3.then([&]()
   - game::RES::Text scoreText - 玩家分数显示字体对象
   - game::RES::Text hpText - 玩家生命值显示字体对象
   - game::projectile::ProjectileManager projectileManager - 投掷物管理器
+
 #### 自定义函数
 以下自定义函数为在父类Controller中未定义，在子类中添加的函数
 - private:
@@ -382,12 +389,14 @@ controller3.then([&]()
 
 ### EndScreenController
 该控制器为退出界面控制器，在init方法里渲染了整个游戏结束界面，同时使用3rdparty中的http工具向api服务器发起http请求，获取并渲染排行榜。在tick方法中，该控制器检查用户是否点击了`q`键以决定是否退出，同时给点击q键的提示字符添加呼吸动画。
+
 #### 外部依赖
 - text.cpp
   - Text类
 - 3rdparty/request.cpp
   - HTTP::get 函数
   - HTTP::post 函数
+
 #### 自定义成员变量
 以下自定义成员变量为在父类Controller中未定义，在子类中添加的成员变量
 - uint32_t score - 用于显示的分数，默认为0
@@ -395,6 +404,7 @@ controller3.then([&]()
 - Json::Value leaderboard - 排行榜数据，默认为空
 - bool dir - 呼吸效果方向标志
 - int counter - 呼吸效果进度计数器
+
 #### 自定义函数
 以下自定义函数为在父类Controller中未定义，在子类中添加的函数
 - public:

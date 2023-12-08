@@ -324,21 +324,26 @@ This game is driven by the following controllers, which run in order from top to
 
 ## Controller
 All controllers mentioned below are located in controllers.cpp, please check the source code for details
+
 ### StartScreenController
 This controller is the startup interface controller, which renders the entire startup interface in the init method.
 In the tick method, the controller checks whether the user clicked the `c` key to decide whether to start the game, and also adds a breathing animation to the prompt character for clicking the c key.
+
 #### External dependencies
 - None
+
 #### Custom member variables
 The following custom member variables are undefined in the parent class Controller and are added in the derived class.
 - bool dir - breathing effect direction flag
 - int counter - breathing effect progress counter
+
 #### Custom functions
 The following custom functions are not defined in the parent class Controller and are added in the derived class
 - None
 
 ### TestController
 The main interface controller of the game is used to control the logic of the entire game, including player movement, enemy generation, projectile generation, collision detection, out-of-bounds detection, score calculation, health value calculation, and death detection. It also take in `w, s, a, d` key events to move the ally ship accordingly.
+
 #### External dependencies
 - text.cpp
    - Text class
@@ -348,6 +353,7 @@ The main interface controller of the game is used to control the logic of the en
    - ProjectileManager class
 -vec.hpp
    - Vec2 class
+
 #### Custom member variables
 The following custom member variables are undefined in the parent class Controller and are added in the derived class.
 - constant
@@ -368,6 +374,7 @@ The following custom member variables are undefined in the parent class Controll
    - game::RES::Text scoreText - player score display font object
    - game::RES::Text hpText - player health value display font object
    - game::projectile::ProjectileManager projectileManager - projectile manager
+
 #### Custom functions
 The following custom functions are not defined in the parent class Controller and are added in the derived class
 -private:
@@ -381,12 +388,14 @@ The following custom functions are not defined in the parent class Controller an
 
 ### EndScreenController
 This controller is an exit interface controller. It renders the entire game end interface in the init method. At the same time, it uses the http tool in 3rdparty to initiate an http request to the api server to obtain and render the leaderboard. In the tick method, the controller checks whether the user clicked the `q` key to decide whether to exit, and also adds a breathing animation to the prompt character for clicking the q key.
+
 #### External dependencies
 - text.cpp
    - Text class
 - 3rdparty/request.cpp
    - HTTP::get function
    - HTTP::post function
+
 #### Custom member variables
 The following custom member variables are undefined in the parent class Controller and are added in the derived class.
 - uint32_t score - score for display, default is 0
@@ -394,6 +403,7 @@ The following custom member variables are undefined in the parent class Controll
 - Json::Value leaderboard - leaderboard data, empty by default
 - bool dir - breathing effect direction flag
 - int counter - breathing effect progress counter
+
 #### Custom function
 The following custom functions are not defined in the parent class Controller and are added in the derived class
 - public:
