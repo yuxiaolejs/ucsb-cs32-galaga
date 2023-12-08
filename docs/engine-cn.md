@@ -352,33 +352,33 @@ controller3.then([&]()
 #### 自定义成员变量
 以下自定义成员变量为在父类Controller中未定义，在子类中添加的成员变量
 - 常量
-  - const float MAX_HORIZ_COORD
-  - const float MAX_VERTI_COORD
-  - const float COLLISION_BOX_RADIUS
-  - const size_t ENERMY_SHIPS_IN_A_GEN
-  - const size_t FRAMES_PER_ALLY_PROJECTILE_GEN
-  - const size_t FRAMES_PER_ENERMY_PROJECTILE_GEN
+  - const float MAX_HORIZ_COORD - 最大横向坐标绝对值
+  - const float MAX_VERTI_COORD - 最大纵向坐标绝对值
+  - const float COLLISION_BOX_RADIUS - 碰撞箱半径
+  - const size_t ENERMY_SHIPS_IN_A_GEN - 单次尝试生成敌人数量
+  - const size_t FRAMES_PER_ALLY_PROJECTILE_GEN - 友方导弹发射间隔
+  - const size_t FRAMES_PER_ENERMY_PROJECTILE_GEN - 敌方导弹发射间隔
 - 变量
-  - int framesPerShipGeneration;
-  - Shape background;
-  - int framesSinceLastShipGeneration;
-  - uint64_t frameCount
-  - Vec2 shipVelocity
-  - uint32_t score
-  - int hp
-  - game::RES::Text scoreText
-  - game::RES::Text hpText
-  - game::projectile::ProjectileManager projectileManager
+  - int framesPerShipGeneration - 飞机生成间隔
+  - Shape background - 背景元素对象
+  - int framesSinceLastShipGeneration - 上一次生成飞机之后帧数计数
+  - uint64_t frameCount - 帧数计数
+  - Vec2 shipVelocity - 友方飞船速度
+  - uint32_t score - 玩家分数
+  - int hp - 玩家生命值
+  - game::RES::Text scoreText - 玩家分数显示字体对象
+  - game::RES::Text hpText - 玩家生命值显示字体对象
+  - game::projectile::ProjectileManager projectileManager - 投掷物管理器
 #### 自定义函数
 以下自定义函数为在父类Controller中未定义，在子类中添加的函数
 - private:
-  - void calcVelocity()
-  - void moveBackground()
-  - void generateEnermyShips()
-  - void generateProjectiles()
-  - void collisionDetection()
-  - void hpVerification()
-  - bool outOfBound(game::RES::Shape &shape)
+  - void calcVelocity() - 计算速度（已弃用）
+  - void moveBackground() - 将背景向左平移，造成飞船向右移动的效果
+  - void generateEnermyShips() - 生成敌方飞船，使用随机数决定是否生成
+  - void generateProjectiles() - 发射投掷物，所有飞船发射StupidProjectile，随机一个敌方发射SmartProjectile
+  - void collisionDetection() - 检测碰撞（飞船/飞船，投掷物/飞船），同时完成血量操作
+  - void hpVerification() - 血量检测，如果血量过低将结束游戏
+  - bool outOfBound(game::RES::Shape &shape) - 出界检测，返回一个元素是否离开了屏幕可见范围
 
 ### EndScreenController
 该控制器为退出界面控制器，在init方法里渲染了整个游戏结束界面，同时使用3rdparty中的http工具向api服务器发起http请求，获取并渲染排行榜。在tick方法中，该控制器检查用户是否点击了`q`键以决定是否退出，同时给点击q键的提示字符添加呼吸动画。
