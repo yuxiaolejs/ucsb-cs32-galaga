@@ -81,7 +81,7 @@ As a user, you don't need to know how OpenGL runs, you just need to interact wit
 
 ### Detailed explaination
 #### std::map<int, game::RES::Layer> game::layers
-This is a global object used to store all layers displayed on the screen. Each layer contains a vector used to carry all elements in the layer. The smallest unit is Shape, please refer to the detailed explanation of class definition. This object is extremely important and will be read frequently. Please **be sure to comply with the locking specifications of game::layersMutex**.
+This is a global object used to store all layers displayed on the screen. Each layer contains a vector used to carry all elements in the layer. The smallest unit is Shape, please refer to the detailed explanation of class definition. In this object, the `int` key is used to determine display order (overlapping of the layers), and `Layer` key is the Layer object to display. This object is extremely important and will be read frequently. Please **be sure to comply with the locking specifications of game::layersMutex**.
 
 Use case: Create an element that displays as a texture for res/logo.png
 ```
